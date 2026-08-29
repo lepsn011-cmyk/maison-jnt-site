@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maison JNT — Fragrance House</title>
+<meta name="description" content="Boutique de parfums indépendante et multi-marques. Une centaine de références en rayon : Lattafa, Armaf, Rasasi, Maison Alhambra, Afnan et d'autres. Venez sentir.">
+<meta name="theme-color" content="#E9DFD8">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23E9DFD8'/%3E%3Ctext x='16' y='22' font-family='Didot,serif' font-size='15' letter-spacing='1' text-anchor='middle' fill='%232A2320'%3EJNT%3C/text%3E%3C/svg%3E">
+
+<!-- Polices AUTO-HÉBERGÉES, pas chargées depuis Google.
+     Trois raisons, dans cet ordre :
+       1. Vérifiabilité : Chromium n'atteint pas fonts.googleapis.com dans
+          l'environnement de QA (ERR_CONNECTION_RESET) — les captures auraient
+          montré des polices de repli en laissant croire au rendu réel.
+       2. Vie privée : aucune requête du visiteur vers un tiers (la CNIL a
+          sanctionné l'appel Google Fonts côté client).
+       3. Performance : plus de requête tierce ni de résolution DNS externe.
+     Sous-ensembles latin + latin-ext, 166 Ko au total. -->
+<style>
+/* CORRECTIF VÉRIFIÉ — ne pas retirer.
+   Bodoni Moda déclare bien U+2013/U+2014 dans son cmap, mais dessine ces deux
+   tirets SANS ENCRE : ils s'affichaient comme un blanc au milieu d'une phrase.
+   (Diagnostic prouvé par rendu comparé, pas supposé : fontTools confirmait la
+   présence du codepoint, ce qui rendait la fausse piste « glyphe absent »
+   très crédible.)
+   Cette face ne couvre QUE les deux tirets et passe avant Bodoni dans la pile :
+   tout le reste du texte retombe sur Bodoni via unicode-range. Elle protège
+   aussi les textes que le client écrira plus tard dans catalogue.js. */
+@font-face{
+  font-family:'Tirets';
+  font-style:normal;
+  font-weight:300 500;
+  font-display:swap;
+  src:url('assets/fonts/jost-latin.woff2') format('woff2');
+  unicode-range:U+2013-2014;
+}
+@font-face{
+  font-family:'Bodoni Moda';
+  font-style:normal;
+  font-weight:400 500;
+  font-display:swap;
+  src:url('assets/fonts/bodoni-moda-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face{
+  font-family:'Bodoni Moda';
+  font-style:normal;
+  font-weight:400 500;
+  font-display:swap;
+  src:url('assets/fonts/bodoni-moda-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'Italianno';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('assets/fonts/italianno-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face{
+  font-family:'Italianno';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('assets/fonts/italianno-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'Jost';
+  font-style:normal;
+  font-weight:300 500;
+  font-display:swap;
+  src:url('assets/fonts/jost-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face{
+  font-family:'Jost';
+  font-style:normal;
+  font-weight:300 500;
+  font-display:swap;
+  src:url('assets/fonts/jost-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+
+<style>
+/* ==========================================================================
+   MAISON JNT — système visuel
+   Voir DESIGN.md pour les arbitrages (palette verrouillée client, budget motion).
+   ========================================================================== */
+
+:root{
+  /* --- Palette. Le beige est la couleur du logo : elle est VERROUILLÉE.
+         Une seule ligne à corriger dès réception du fichier logo. --- */
+  --beige:        oklch(0.902 0.014 52);
+  --grege:        oklch(0.855 0.016 52);
+  --grege-fonce:  oklch(0.795 0.018 52);
+  --encre:        oklch(0.205 0.012 52);
+  --encre-douce:  oklch(0.392 0.011 52);
+  --accent:       oklch(0.44  0.09  40);
+  --accent-vif:   oklch(0.38  0.10  40);
+  --sur-encre:    oklch(0.940 0.008 52);
+  --sur-encre-doux: oklch(0.790 0.010 52);
+
+  /* --- Typographie --- */
+  --display: 'Tirets', 'Bodoni Moda', 'Didot', 'Times New Roman', serif;
+  --corps:   'Jost', 'Futura', 'Century Gothic', system-ui, sans-serif;
+  --script:  'Italianno', 'Snell Roundhand', cursive;
+
+  /* --- Espacement : trame 4px, sections 80/120 (éprouvé cham-site) --- */
+  --section-y: 80px;
+  --gouttiere: 20px;
+  --max: 1320px;
+
+  /* --- Mouvement : courbes reprises de emil-design-eng. Jamais ease-in. --- */
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --t-micro: 120ms;
+  --t-fiche: 220ms;
+  --t-sortie: 150ms;
+
+  /* --- Échelle z-index sémantique. Jamais 999. --- */
+  --z-base: 1;
+  --z-nav: 100;
+  --z-sheet: 200;
+}
+
+@media (min-width: 900px){
+  :root{ --section-y: 120px; --gouttiere: 40px; }
+}
+
+*,*::before,*::after{ box-sizing: border-box; }
+
+html{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+
+body{
+  margin: 0;
+  background: var(--beige);
+  color: var(--encre);
+  font-family: var(--corps);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width: 100%; display: block; }
+
+:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.enveloppe{
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gouttiere);
+}
+
+.invisible{
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Sans cette règle, toute classe portant un `display` explicite (.grille en
+   grid, le compteur en inline-flex) l'emporte sur le display:none du UA et
+   l'attribut `hidden` devient silencieusement inopérant. */
+[hidden]{ display: none !important; }
+
+/* Lien d'évitement : masqué, mais il DOIT redevenir visible au clavier —
+   sinon il n'aide personne. */
+.evitement:focus{
+  position: fixed;
+  top: 8px; left: 8px;
+  z-index: 300;
+  width: auto; height: auto;
+  margin: 0; padding: 12px 18px;
+  clip: auto;
+  background: var(--encre);
+  color: var(--sur-encre);
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------- TYPO BASE */
+
+h1,h2,h3{
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.12;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* Bodoni Moda UNIQUEMENT >= 24px : ses déliés disparaissent en petit corps.
+   Toute étiquette sous ce seuil est en Jost. (DESIGN.md §2) */
+h1{ font-size: clamp(2.25rem, 7vw, 4rem); letter-spacing: 0.01em; }
+h2{ font-size: clamp(1.75rem, 4vw, 2.75rem); letter-spacing: 0.02em; }
+h3{ font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+
+p{ margin: 0 0 1em; text-wrap: pretty; }
+p:last-child{ margin-bottom: 0; }
+
+.mesure{ max-width: 62ch; }
+
+/* Étiquette : capitales espacées, en Jost (jamais Bodoni sous 24px) */
+.etiquette{
+  font-family: var(--corps);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--encre-douce);
+}
+
+a{ color: inherit; }
+
+/* ------------------------------------------------------------------ BOUTONS */
+
+.bouton{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 26px;
+  border: 1px solid var(--encre);
+  border-radius: 2px;
+  background: var(--encre);
+  color: var(--sur-encre);
+  font-family: var(--corps);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--t-micro) var(--ease-out),
+              color var(--t-micro) var(--ease-out),
+              border-color var(--t-micro) var(--ease-out);
+}
+.bouton:hover{ background: var(--accent); border-color: var(--accent); }
+.bouton:active{ background: var(--accent-vif); border-color: var(--accent-vif); }
+
+.bouton--creux{ background: transparent; color: var(--encre); }
+.bouton--creux:hover{ background: var(--encre); color: var(--sur-encre); }
+
+/* ========================================================================== */
+/* NAV                                                                        */
+/* ========================================================================== */
+
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  background: var(--beige);
+  border-bottom: 1px solid var(--grege-fonce);
+}
+.nav__interieur{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+}
+@media (min-width: 900px){ .nav__interieur{ min-height: 76px; } }
+
+/* --- Wordmark : RECONSTRUCTION TYPOGRAPHIQUE du logo client.
+       Isolé ici et dans le hero pour un remplacement en une édition dès
+       réception de assets/logo-jnt.svg. (DESIGN.md §8) --- */
+.marque{
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--encre);
+  flex-shrink: 0;
+  justify-content: center;
+  min-height: 44px;   /* c'est un lien : cible tactile, pas seulement du texte */
+}
+.marque__haut{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.16em;
+}
+.marque__initiales{
+  font-family: var(--display);
+  font-size: 1.375rem;
+  letter-spacing: 0.08em;
+}
+.marque__script{
+  font-family: var(--script);
+  font-size: 1.625rem;
+  line-height: 0.7;
+  color: var(--encre-douce);
+}
+.marque__signature{
+  font-family: var(--corps);
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--encre-douce);
+  margin-top: 3px;
+}
+
+.nav__liens{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav__lien{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
+  /* Sans nowrap, « La boutique » se coupait en deux lignes à 375px et
+     déformait la barre. Mesuré, pas supposé. */
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--encre-douce);
+  border-bottom: 1px solid transparent;
+  transition: color var(--t-micro) var(--ease-out),
+              border-color var(--t-micro) var(--ease-out);
+}
+.nav__lien:hover{ color: var(--encre); border-bottom-color: var(--accent); }
+
+.nav__lien--secondaire{ display: none; }
+
+@media (max-width: 479px){
+  .marque__initiales{ font-size: 1.1875rem; }
+  .marque__script{ font-size: 1.4375rem; }
+  .marque__signature{ font-size: 0.4375rem; letter-spacing: 0.22em; }
+}
+
+@media (min-width: 700px){
+  .nav__lien--secondaire{ display: inline-flex; }
+  .nav__lien{ padding: 0 14px; font-size: 0.8125rem; }
+}
+
+/* ========================================================================== */
+/* HERO                                                                       */
+/* ========================================================================== */
+
+.hero{
+  padding-block: clamp(48px, 9vw, 104px) clamp(48px, 8vw, 88px);
+  background: linear-gradient(180deg, var(--beige) 0%, var(--grege) 100%);
+  border-bottom: 1px solid var(--grege-fonce);
+}
+.hero__titre{ margin-bottom: 24px; }
+.hero__titre em{
+  font-style: italic;
+  color: var(--encre-douce);
+}
+.hero__chapo{
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  color: var(--encre-douce);
+  max-width: 54ch;
+  margin-bottom: 32px;
+}
+.hero__actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+/* Les maisons distribuées : contenu réel ET raccourci de filtrage.
+   Fonctionnel, pas décoratif. */
+.maisons{ border-top: 1px solid var(--grege-fonce); padding-top: 20px; }
+.maisons__titre{ margin-bottom: 12px; }
+.maisons__liste{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.maisons__bouton{
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  color: var(--encre);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-micro) var(--ease-out),
+              color var(--t-micro) var(--ease-out);
+}
+.maisons__bouton:hover{ color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ========================================================================== */
+/* CATALOGUE                                                                  */
+/* ========================================================================== */
+
+.section{ padding-block: var(--section-y); }
+
+.section__entete{ margin-bottom: 36px; }
+.section__intro{ color: var(--encre-douce); margin-top: 12px; }
+
+.catalogue__corps{
+  display: grid;
+  gap: 32px;
+  align-items: start;
+}
+
+/* En mobile, les filtres vivent DANS la feuille : le rail est masqué, sinon le
+   même panneau s'afficherait deux fois. Le panneau lui-même n'est jamais
+   dupliqué — il est déplacé (voir ouvrirFeuille()). */
+#ancre-filtres{ display: none; }
+
+@media (min-width: 900px){
+  .catalogue__corps{ grid-template-columns: 264px 1fr; gap: 48px; }
+  #ancre-filtres{ display: block; position: sticky; top: 92px; }
+}
+
+/* ------------------------------------------------------------- RECHERCHE */
+
+.recherche{ position: relative; margin-bottom: 24px; }
+.recherche__champ{
+  width: 100%;
+  min-height: 48px;
+  padding: 0 40px 0 14px;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  background: var(--beige);
+  color: var(--encre);
+  font-family: var(--corps);
+  font-size: 1rem;
+  transition: border-color var(--t-micro) var(--ease-out);
+}
+.recherche__champ::placeholder{ color: var(--encre-douce); }
+.recherche__champ:hover{ border-color: var(--encre-douce); }
+.recherche__vider{
+  position: absolute;
+  right: 2px; top: 50%;
+  transform: translateY(-50%);
+  width: 44px; height: 44px;
+  display: none;
+  align-items: center; justify-content: center;
+  border: 0; background: transparent;
+  color: var(--encre-douce);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.recherche__vider[data-visible="oui"]{ display: inline-flex; }
+.recherche__vider:hover{ color: var(--accent); }
+
+/* -------------------------------------------------------------- FACETTES */
+
+.filtres__panneau{ display: block; }
+
+.groupe{
+  border: 0;
+  padding: 0;
+  margin: 0 0 24px;
+  border-top: 1px solid var(--grege-fonce);
+  padding-top: 16px;
+}
+.groupe__titre{ padding: 0; margin-bottom: 12px; }
+
+.puces{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* La puce EST le label : la case native est masquée mais reste focusable. */
+.puce{ position: relative; display: inline-flex; }
+.puce__case{
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.puce__texte{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  background: transparent;
+  font-size: 0.875rem;
+  color: var(--encre);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--t-micro) var(--ease-out),
+              border-color var(--t-micro) var(--ease-out),
+              color var(--t-micro) var(--ease-out);
+}
+.puce__texte:hover{ border-color: var(--encre-douce); background: var(--grege); }
+.puce__case:checked + .puce__texte{
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--sur-encre);
+}
+.puce__case:focus-visible + .puce__texte{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.puce__nombre{
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-douce);
+}
+.puce__case:checked + .puce__texte .puce__nombre{ color: var(--sur-encre-doux); }
+.puce__case:disabled + .puce__texte{ opacity: 0.4; cursor: not-allowed; }
+
+.filtres__pied{
+  border-top: 1px solid var(--grege-fonce);
+  padding-top: 16px;
+}
+.lien-action{
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-family: var(--corps);
+  font-size: 0.875rem;
+  color: var(--encre-douce);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: color var(--t-micro) var(--ease-out);
+}
+.lien-action:hover{ color: var(--accent); }
+
+/* ------------------------------------------------ BARRE MOBILE / RÉSULTATS */
+
+.barre-resultats{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  min-height: 48px;
+}
+.compteur{
+  font-size: 0.875rem;
+  color: var(--encre-douce);
+  font-variant-numeric: tabular-nums;
+}
+.compteur strong{ color: var(--encre); font-weight: 500; }
+
+.ouvrir-filtres{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--encre);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--corps);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--encre);
+  cursor: pointer;
+  transition: background var(--t-micro) var(--ease-out), color var(--t-micro) var(--ease-out);
+}
+.ouvrir-filtres:hover{ background: var(--encre); color: var(--sur-encre); }
+.ouvrir-filtres__compte{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px; height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--sur-encre);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 900px){
+  .ouvrir-filtres{ display: none; }
+}
+
+/* ------------------------------------------------------------- LA GRILLE */
+
+/* Densité assumée : 2 / 3 / 4 colonnes. La boutique vend l'abondance —
+   trois produits par écran trahirait l'argument commercial. (PRODUCT.md) */
+.grille{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--grege-fonce);
+  border-block: 1px solid var(--grege-fonce);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 640px){ .grille{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+@media (min-width: 1180px){ .grille{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
+
+.grille__case{ display: flex; }
+
+/* Entrée d'index, pas « carte » : filets fins, aucun caisson ombré.
+   (impeccable bannit les grilles de cartes identiques décoratives.) */
+.entree{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-height: 168px;
+  padding: 18px 16px 16px;
+  border: 0;
+  background: var(--beige);
+  text-align: left;
+  font-family: var(--corps);
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--t-micro) var(--ease-out);
+  /* Visible par défaut : l'animation d'entrée enrichit un état déjà peint,
+     elle ne le produit pas. (impeccable) */
+  opacity: 1;
+}
+.entree:hover{ background: var(--grege); }
+.entree:focus-visible{ outline-offset: -2px; }
+
+.entree__marque{
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--encre-douce);
+}
+.entree__nom{
+  font-family: var(--display);
+  font-size: 1.375rem;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+.entree__meta{
+  font-size: 0.8125rem;
+  color: var(--encre-douce);
+  margin-top: auto;
+}
+.entree__pied{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding-top: 10px;
+  border-top: 1px solid var(--grege-fonce);
+}
+.entree__conc{
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--encre-douce);
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  padding: 3px 6px;
+}
+.entree__prix{
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--encre);
+}
+.entree__prix--contact{ color: var(--accent); }
+
+.entree__drapeau{
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Stagger : PREMIER rendu seulement. Filtrer est un geste répété — il est
+   instantané, sinon le catalogue devient plus lent à l'usage.
+   (emil-design-eng, tableau de fréquence) */
+.grille--entree .entree{
+  animation: apparition 300ms var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+@keyframes apparition{
+  from{ opacity: 0; transform: translateY(6px); }
+}
+
+/* ----------------------------------------------------------- ÉTAT VIDE */
+
+.vide{
+  padding: 56px 20px;
+  text-align: center;
+  border-block: 1px solid var(--grege-fonce);
+}
+.vide__titre{ margin-bottom: 10px; }
+.vide__texte{ color: var(--encre-douce); margin-bottom: 20px; }
+
+/* ========================================================================== */
+/* FICHE PRODUIT — <dialog> natif                                             */
+/* ========================================================================== */
+
+.fiche{
+  width: min(680px, calc(100vw - 32px));
+  max-height: min(88vh, 900px);
+  padding: 0;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  background: var(--beige);
+  color: var(--encre);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.fiche::backdrop{ background: oklch(0.205 0.012 52 / 0.55); }
+
+/* Origine calculée depuis la carte cliquée : la fiche paraît en sortir.
+   (emil-design-eng : « make popovers origin-aware ») */
+.fiche[open]{
+  animation: fiche-entree var(--t-fiche) var(--ease-out);
+  transform-origin: var(--origine-x, 50%) var(--origine-y, 50%);
+}
+.fiche[open]::backdrop{ animation: fondu var(--t-fiche) var(--ease-out); }
+.fiche.ferme{ animation: fiche-sortie var(--t-sortie) var(--ease-out) forwards; }
+
+@keyframes fiche-entree{
+  from{ opacity: 0; transform: scale(0.96) translateY(8px); }
+}
+@keyframes fiche-sortie{
+  to{ opacity: 0; transform: scale(0.98); }
+}
+@keyframes fondu{ from{ opacity: 0; } }
+
+.fiche__entete{
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 22px 16px;
+  background: var(--beige);
+  border-bottom: 1px solid var(--grege-fonce);
+}
+.fiche__fermer{
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--encre);
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--t-micro) var(--ease-out), color var(--t-micro) var(--ease-out);
+}
+.fiche__fermer:hover{ background: var(--encre); color: var(--sur-encre); }
+
+.fiche__marque{ margin-bottom: 6px; }
+.fiche__nom{ font-size: clamp(1.75rem, 5vw, 2.25rem); }
+
+.fiche__corps{ padding: 22px; }
+
+.fiche__attributs{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.fiche__attribut{
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--encre-douce);
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  padding: 5px 9px;
+}
+
+.fiche__description{ color: var(--encre-douce); margin-bottom: 28px; }
+
+/* --- La pyramide olfactive : pièce maîtresse de la fiche, pas une ligne de
+       spécifications. C'est le vocabulaire du métier. (PRODUCT.md) --- */
+.pyramide{ margin-bottom: 28px; }
+.pyramide__titre{ margin-bottom: 16px; }
+.pyramide__liste{ margin: 0; padding: 0; }
+
+.etage{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  padding: 14px 0 14px 20px;
+  border-left: 1px solid var(--grege-fonce);
+  position: relative;
+}
+.etage::before{
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 20px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.etage:last-child{ border-left-color: transparent; }
+@media (min-width: 560px){
+  .etage{ grid-template-columns: 116px 1fr; gap: 16px; align-items: baseline; }
+}
+.etage__nom{ margin: 0; }
+.etage__notes{ margin: 0; font-size: 0.9375rem; }
+
+.fiche__ligne-prix{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--grege-fonce);
+}
+.fiche__prix{
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+.fiche__prix--contact{
+  font-family: var(--corps);
+  font-size: 0.9375rem;
+  color: var(--encre-douce);
+  max-width: 34ch;
+}
+.fiche__source{
+  font-size: 0.75rem;
+  color: var(--encre-douce);
+  margin-top: 18px;
+}
+.fiche__source a{ color: var(--encre-douce); text-underline-offset: 3px; }
+.fiche__source a:hover{ color: var(--accent); }
+
+/* ========================================================================== */
+/* PANNEAU FILTRES MOBILE — <dialog> en feuille basse                         */
+/* ========================================================================== */
+
+.feuille{
+  width: 100vw;
+  max-width: 100vw;
+  height: 88vh;
+  max-height: 88vh;
+  margin: 0;
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--grege-fonce);
+  border-radius: 2px 2px 0 0;
+  background: var(--beige);
+  color: var(--encre);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.feuille::backdrop{ background: oklch(0.205 0.012 52 / 0.55); }
+.feuille[open]{ animation: feuille-entree 300ms var(--ease-drawer); }
+.feuille[open]::backdrop{ animation: fondu 300ms var(--ease-drawer); }
+.feuille.ferme{ animation: feuille-sortie 200ms var(--ease-drawer) forwards; }
+
+@keyframes feuille-entree{ from{ transform: translateY(100%); } }
+@keyframes feuille-sortie{ to{ transform: translateY(100%); } }
+
+.feuille__entete{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--grege-fonce);
+}
+.feuille__corps{ flex: 1; overflow: auto; padding: 20px; overscroll-behavior: contain; }
+.feuille__pied{
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--grege-fonce);
+  background: var(--grege);
+}
+.feuille__pied .bouton{ width: 100%; }
+
+@media (min-width: 900px){
+  .feuille[open]{ display: none; }
+}
+
+/* ========================================================================== */
+/* MAISON DU MOIS — bande sombre : la page a une architecture de contraste,    */
+/* pas un aplat de beige du début à la fin. (DESIGN.md §1)                     */
+/* ========================================================================== */
+
+.editorial{
+  background: var(--encre);
+  color: var(--sur-encre);
+}
+.editorial .etiquette{ color: var(--sur-encre-doux); }
+.editorial__grille{ display: grid; gap: 32px; }
+@media (min-width: 900px){
+  .editorial__grille{ grid-template-columns: 0.8fr 1.2fr; gap: 64px; align-items: start; }
+}
+.editorial__nom{
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  margin: 10px 0 6px;
+}
+.editorial__origine{ color: var(--sur-encre-doux); font-size: 0.9375rem; }
+.editorial__texte{ color: var(--sur-encre-doux); }
+
+.editorial__selection{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid oklch(0.94 0.008 52 / 0.22);
+}
+.editorial__item{ border-bottom: 1px solid oklch(0.94 0.008 52 / 0.22); }
+.editorial__bouton{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 0;
+  border: 0;
+  background: transparent;
+  color: var(--sur-encre);
+  font-family: var(--corps);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--t-micro) var(--ease-out);
+}
+.editorial__bouton:hover{ color: var(--accent-clair, oklch(0.72 0.09 40)); }
+.editorial__bouton:focus-visible{ outline-color: oklch(0.72 0.09 40); }
+.editorial__item-nom{ font-family: var(--display); font-size: 1.375rem; }
+.editorial__item-meta{ font-size: 0.8125rem; color: var(--sur-encre-doux); flex-shrink: 0; }
+
+/* ========================================================================== */
+/* LA BOUTIQUE — traitée en actif, pas en note de bas de page                  */
+/* ========================================================================== */
+
+.boutique{ background: var(--grege); border-top: 1px solid var(--grege-fonce); }
+.boutique__grille{ display: grid; gap: 36px; }
+@media (min-width: 900px){
+  .boutique__grille{ grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+}
+
+/* Placeholder patterné, nom de fichier affiché en clair, ratio réservé :
+   zéro décalage à l'intégration de la vraie photo. (CLAUDE.md §2 Phase 2) */
+.photo-attendue{
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  background-color: var(--beige);
+  background-image:
+    linear-gradient(45deg, var(--grege) 25%, transparent 25%, transparent 75%, var(--grege) 75%),
+    linear-gradient(45deg, var(--grege) 25%, transparent 25%, transparent 75%, var(--grege) 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+.photo-attendue__nom{
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--encre);
+  background: var(--beige);
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  padding: 6px 10px;
+}
+.photo-attendue__mot{ font-size: 0.8125rem; color: var(--encre-douce); max-width: 30ch; }
+
+.boutique__invitation{
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 2.6vw, 1.625rem);
+  line-height: 1.35;
+  margin-bottom: 28px;
+}
+
+.infos{ margin: 0 0 28px; }
+.infos__ligne{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  padding: 14px 0;
+  border-top: 1px solid var(--grege-fonce);
+}
+@media (min-width: 480px){
+  .infos__ligne{ grid-template-columns: 116px 1fr; gap: 16px; align-items: baseline; }
+}
+.infos__cle{ margin: 0; }
+.infos__valeur{ margin: 0; font-size: 0.9375rem; }
+.infos__valeur a{ text-underline-offset: 3px; }
+.infos__valeur a:hover{ color: var(--accent); }
+
+/* Champ non fourni par le client : affiché comme tel, jamais inventé.
+   Un état de passation assumé, pas un bug. */
+.a-confirmer{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--encre-douce);
+  font-style: italic;
+}
+.a-confirmer::before{
+  content: "";
+  width: 30px;
+  height: 1px;
+  border-bottom: 1px dashed var(--encre-douce);
+}
+
+/* ========================================================================== */
+/* PIED DE PAGE                                                               */
+/* ========================================================================== */
+
+.pied{
+  background: var(--encre);
+  color: var(--sur-encre-doux);
+  padding-block: 48px 32px;
+}
+.pied__haut{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: space-between;
+  padding-bottom: 28px;
+  border-bottom: 1px solid oklch(0.94 0.008 52 / 0.18);
+}
+.pied .marque{ color: var(--sur-encre); }
+.pied .marque__script,
+.pied .marque__signature{ color: var(--sur-encre-doux); }
+
+.pied__liens{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pied__lien{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.875rem;
+  color: var(--sur-encre-doux);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--t-micro) var(--ease-out), border-color var(--t-micro) var(--ease-out);
+}
+.pied__lien:hover{ color: var(--sur-encre); border-bottom-color: oklch(0.72 0.09 40); }
+.pied__lien:focus-visible{ outline-color: oklch(0.72 0.09 40); }
+
+.pied__bas{
+  padding-top: 24px;
+  font-size: 0.8125rem;
+  color: oklch(0.66 0.010 52);
+}
+
+/* ========================================================================== */
+/* MOUVEMENT RÉDUIT — non optionnel.                                          */
+/* Contenu 100 % visible, aucune boucle, aucune cinématique. (CLAUDE.md §5)    */
+/* ========================================================================== */
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grille--entree .entree{ animation: none; opacity: 1; transform: none; }
+  .fiche[open], .feuille[open], .fiche.ferme, .feuille.ferme{ animation: none; }
+}
+</style>
+</head>
+
+<body>
+
+<a class="invisible evitement" href="#catalogue">Aller au catalogue</a>
+
+<!-- ====================================================================== -->
+<!-- NAV                                                                     -->
+<!-- ====================================================================== -->
+<header class="nav">
+  <div class="enveloppe nav__interieur">
+    <a class="marque" href="#haut" aria-label="Maison JNT, Fragrance House — retour en haut">
+      <span class="marque__haut">
+        <span class="marque__initiales">JNT</span>
+        <span class="marque__script" aria-hidden="true">Maison</span>
+      </span>
+      <span class="marque__signature">Fragrance House</span>
+    </a>
+    <nav class="nav__liens" aria-label="Navigation principale">
+      <a class="nav__lien" href="#catalogue">Catalogue</a>
+      <a class="nav__lien nav__lien--secondaire" href="#maison-du-mois">La maison du mois</a>
+      <a class="nav__lien" href="#boutique">Boutique</a>
+    </nav>
+  </div>
+</header>
+
+<main id="haut">
+
+  <!-- ==================================================================== -->
+  <!-- HERO                                                                  -->
+  <!-- ==================================================================== -->
+  <section class="hero">
+    <div class="enveloppe">
+      <h1 class="hero__titre">Une centaine de parfums.<br><em>Un seul moyen de choisir.</em></h1>
+      <p class="hero__chapo">
+        Maison JNT est une boutique indépendante et multi-marques. On y trouve les maisons
+        orientales que l'on cherche rarement ailleurs — et quelqu'un pour vous les faire sentir.
+      </p>
+      <div class="hero__actions">
+        <a class="bouton" href="#catalogue">Parcourir le catalogue</a>
+        <a class="bouton bouton--creux" href="#boutique">Venir en boutique</a>
+      </div>
+
+      <div class="maisons">
+        <p class="etiquette maisons__titre" id="maisons-titre">Les maisons distribuées</p>
+        <ul class="maisons__liste" id="maisons-liste" aria-labelledby="maisons-titre"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- CATALOGUE                                                             -->
+  <!-- ==================================================================== -->
+  <section class="section" id="catalogue" aria-labelledby="catalogue-titre">
+    <div class="enveloppe">
+      <div class="section__entete">
+        <h2 id="catalogue-titre">Le catalogue</h2>
+        <p class="section__intro mesure">
+          Une sélection de ce que vous trouverez en rayon. Filtrez par famille olfactive, par
+          maison, ou cherchez directement une référence.
+        </p>
+      </div>
+
+      <div class="catalogue__corps">
+
+        <!-- Rail de filtres : visible en desktop, déplacé dans la feuille en mobile -->
+        <div id="ancre-filtres">
+          <form class="filtres__panneau" id="filtres" role="search" aria-label="Filtrer le catalogue">
+            <div class="recherche">
+              <label class="invisible" for="q">Rechercher un parfum, une maison ou une note</label>
+              <input class="recherche__champ" type="search" id="q" name="q"
+                     placeholder="Nom, maison, note…" autocomplete="off" spellcheck="false">
+              <button class="recherche__vider" type="button" id="vider-q" aria-label="Effacer la recherche">×</button>
+            </div>
+            <div id="facettes"></div>
+            <div class="filtres__pied">
+              <button class="lien-action" type="button" id="tout-effacer">Tout effacer</button>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <div class="barre-resultats">
+            <p class="compteur" id="compteur" aria-live="polite" aria-atomic="true"></p>
+            <button class="ouvrir-filtres" type="button" id="ouvrir-filtres" aria-haspopup="dialog">
+              Filtrer
+              <span class="ouvrir-filtres__compte" id="compte-actifs" hidden></span>
+            </button>
+          </div>
+
+          <ul class="grille" id="grille"></ul>
+
+          <div class="vide" id="vide" hidden>
+            <h3 class="vide__titre">Aucune référence ne correspond</h3>
+            <p class="vide__texte mesure" style="margin-inline:auto">
+              Le rayon est plus large que cette sélection en ligne. Dites-nous ce que vous cherchez,
+              on regarde en boutique.
+            </p>
+            <button class="bouton bouton--creux" type="button" id="vide-effacer">Effacer les filtres</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- LA MAISON DU MOIS                                                     -->
+  <!-- ==================================================================== -->
+  <section class="section editorial" id="maison-du-mois" aria-labelledby="mdm-nom">
+    <div class="enveloppe editorial__grille">
+      <div>
+        <p class="etiquette">La maison du mois</p>
+        <h2 class="editorial__nom" id="mdm-nom"></h2>
+        <p class="editorial__origine" id="mdm-origine"></p>
+      </div>
+      <div>
+        <p class="editorial__texte mesure" id="mdm-texte"></p>
+        <p class="etiquette" style="margin-top:28px" id="mdm-selection-titre">À découvrir</p>
+        <ul class="editorial__selection" id="mdm-selection" aria-labelledby="mdm-selection-titre"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- LA BOUTIQUE                                                           -->
+  <!-- ==================================================================== -->
+  <section class="section boutique" id="boutique" aria-labelledby="boutique-titre">
+    <div class="enveloppe boutique__grille">
+      <div class="photo-attendue">
+        <p class="etiquette">Photo de la boutique</p>
+        <p class="photo-attendue__nom">assets/boutique-interieur.jpg</p>
+        <p class="photo-attendue__mot">
+          Emplacement réservé au ratio définitif : la vraie photo s'intègre sans décaler la page.
+        </p>
+      </div>
+
+      <div>
+        <p class="etiquette">La boutique</p>
+        <h2 id="boutique-titre" style="margin:10px 0 20px">Venez sentir</h2>
+        <p class="boutique__invitation" id="boutique-invitation"></p>
+        <dl class="infos" id="boutique-infos"></dl>
+        <a class="bouton" id="boutique-cta" href="#catalogue">Voir le catalogue</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ====================================================================== -->
+<!-- PIED DE PAGE                                                            -->
+<!-- ====================================================================== -->
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="pied__haut">
+      <div class="marque">
+        <span class="marque__haut">
+          <span class="marque__initiales">JNT</span>
+          <span class="marque__script" aria-hidden="true">Maison</span>
+        </span>
+        <span class="marque__signature">Fragrance House</span>
+      </div>
+      <ul class="pied__liens" id="pied-liens"></ul>
+    </div>
+    <p class="pied__bas">
+      Boutique physique — aucune vente en ligne. Les disponibilités évoluent : appelez-nous ou
+      passez pour vérifier une référence.
+    </p>
+  </div>
+</footer>
+
+<!-- ====================================================================== -->
+<!-- FICHE PRODUIT                                                           -->
+<!-- ====================================================================== -->
+<dialog class="fiche" id="fiche" aria-labelledby="fiche-nom">
+  <div class="fiche__entete">
+    <div>
+      <p class="etiquette fiche__marque" id="fiche-marque"></p>
+      <h2 class="fiche__nom" id="fiche-nom"></h2>
+    </div>
+    <button class="fiche__fermer" type="button" id="fiche-fermer" aria-label="Fermer la fiche">×</button>
+  </div>
+  <div class="fiche__corps">
+    <ul class="fiche__attributs" id="fiche-attributs"></ul>
+    <p class="fiche__description" id="fiche-description"></p>
+
+    <div class="pyramide">
+      <p class="etiquette pyramide__titre">Pyramide olfactive</p>
+      <dl class="pyramide__liste" id="fiche-pyramide"></dl>
+    </div>
+
+    <div class="fiche__ligne-prix" id="fiche-ligne-prix"></div>
+    <p class="fiche__source" id="fiche-source"></p>
+  </div>
+</dialog>
+
+<!-- ====================================================================== -->
+<!-- FEUILLE DE FILTRES (mobile)                                             -->
+<!-- ====================================================================== -->
+<dialog class="feuille" id="feuille" aria-labelledby="feuille-titre">
+  <div class="feuille__entete">
+    <h2 id="feuille-titre" style="font-size:1.5rem">Filtrer</h2>
+    <button class="fiche__fermer" type="button" id="feuille-fermer" aria-label="Fermer les filtres">×</button>
+  </div>
+  <div class="feuille__corps" id="feuille-corps"></div>
+  <div class="feuille__pied">
+    <button class="bouton" type="button" id="feuille-appliquer"></button>
+  </div>
+</dialog>
+
+<script src="catalogue.js"></script>
+<script>
+/* ==========================================================================
+   MAISON JNT — comportement
+   Aucune donnée de parfum ici : tout vient de catalogue.js.
+   ========================================================================== */
+(function(){
+  'use strict';
+
+  var CATALOGUE = window.CATALOGUE || [];
+  var BOUTIQUE  = window.BOUTIQUE  || {};
+  var MDM       = window.MAISON_DU_MOIS || null;
+
+  /* --------------------------------------------------------- libellés --- */
+
+  var LIB_FAMILLE = {
+    florale: 'Florale', boisee: 'Boisée', ambree: 'Ambrée / orientale',
+    hesperidee: 'Hespéridée', fougere: 'Fougère', chypree: 'Chyprée'
+  };
+  var ORDRE_FAMILLE = ['florale','boisee','ambree','hesperidee','fougere','chypree'];
+  var LIB_GENRE = { homme: 'Homme', femme: 'Femme', mixte: 'Mixte' };
+  var ORDRE_GENRE = ['homme','femme','mixte'];
+  var ORDRE_CONC = ['EDT','EDP','Extrait'];
+  var LIB_ETAGE = { tete: 'Notes de tête', coeur: 'Notes de cœur', fond: 'Notes de fond' };
+
+  /* ------------------------------------------------------------ outils --- */
+
+  /* Plage écrite en échappements : les marques diacritiques combinantes en
+     littéral survivent mal aux copies, aux encodages et aux éditeurs. */
+  var DIACRITIQUES = /[\u0300-\u036f]/g;
+  function slug(s){
+    return String(s).normalize('NFD').replace(DIACRITIQUES,'')
+      .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  }
+  function sansAccent(s){
+    return String(s).normalize('NFD').replace(DIACRITIQUES,'').toLowerCase();
+  }
+  function el(tag, cls, txt){
+    var n = document.createElement(tag);
+    if(cls) n.className = cls;
+    if(txt != null) n.textContent = txt;
+    return n;
+  }
+
+  /* --- Prix optionnel. Pattern transposé d'aladdin-site (réimplémenté : le
+         projet n'est pas sur ce disque, seul le pattern est repris).
+         Ne renvoie JAMAIS null/undefined/« 0 € » : soit un prix, soit un
+         appel au contact. Un seul point de vérité pour tout le site. --- */
+  var EURO = new Intl.NumberFormat('fr-FR', {
+    style: 'currency', currency: 'EUR', maximumFractionDigits: 0
+  });
+  function prixOuContact(p){
+    if(typeof p.prix === 'number' && isFinite(p.prix) && p.prix > 0){
+      return { type: 'prix', texte: EURO.format(p.prix) };
+    }
+    return { type: 'contact', texte: 'Prix en boutique' };
+  }
+
+  /* ----------------------------------------------------------- l'état --- */
+
+  var GROUPES = [
+    { cle:'famille',       titre:'Famille olfactive' },
+    { cle:'marque',        titre:'Maison' },
+    { cle:'genre',         titre:'Pour' },
+    { cle:'concentration', titre:'Concentration' },
+    { cle:'tag',           titre:'Sélections' }
+  ];
+
+  var etat = { q: '' };
+  GROUPES.forEach(function(g){ etat[g.cle] = []; });
+
+  /* --- Valeurs de facette DÉRIVÉES DE LA DONNÉE, jamais codées en dur.
+         Conséquence voulue : « Édition limitée » n'apparaît pas tant qu'aucune
+         référence ne porte le drapeau, et apparaît seule dès qu'une le porte. */
+  function valeursDe(cle){
+    var vues = {};
+    CATALOGUE.forEach(function(p){
+      valeursPour(p, cle).forEach(function(v){ vues[v] = true; });
+    });
+    var liste = Object.keys(vues);
+    if(cle === 'famille')  return ORDRE_FAMILLE.filter(function(v){ return vues[v]; });
+    if(cle === 'genre')    return ORDRE_GENRE.filter(function(v){ return vues[v]; });
+    if(cle === 'concentration') return ORDRE_CONC.filter(function(v){ return vues[v]; });
+    if(cle === 'tag')      return ['nouveaute','edition-limitee'].filter(function(v){ return vues[v]; });
+    return liste.sort(function(a,b){ return a.localeCompare(b,'fr'); });
+  }
+
+  function valeursPour(p, cle){
+    if(cle === 'marque') return [p.marque];
+    if(cle === 'tag'){
+      var t = [];
+      if(p.nouveaute) t.push('nouveaute');
+      if(p.editionLimitee) t.push('edition-limitee');
+      return t;
+    }
+    return [p[cle]];
+  }
+
+  function libelle(cle, v){
+    if(cle === 'famille') return LIB_FAMILLE[v] || v;
+    if(cle === 'genre')   return LIB_GENRE[v] || v;
+    if(cle === 'tag')     return v === 'nouveaute' ? 'Nouveautés' : 'Édition limitée';
+    return v;
+  }
+
+  /* --------------------------------------------------------- filtrage --- */
+
+  function passeTexte(p, q){
+    if(!q) return true;
+    var mots = sansAccent(q).split(/\s+/).filter(Boolean);
+    var foin = sansAccent([
+      p.nom, p.marque, LIB_FAMILLE[p.famille] || p.famille, p.concentration,
+      LIB_GENRE[p.genre] || p.genre,
+      p.notes.tete.join(' '), p.notes.coeur.join(' '), p.notes.fond.join(' ')
+    ].join(' '));
+    return mots.every(function(m){ return foin.indexOf(m) !== -1; });
+  }
+
+  function passeGroupe(p, cle){
+    var sel = etat[cle];
+    if(!sel.length) return true;                       /* rien coché = tout */
+    var vals = valeursPour(p, cle);
+    return sel.some(function(s){ return vals.indexOf(s) !== -1; });  /* OU interne */
+  }
+
+  /* ET entre groupes, OU à l'intérieur d'un groupe. `sauf` permet le comptage
+     de facette correct : un groupe ne se compte pas lui-même. */
+  function filtrer(sauf){
+    return CATALOGUE.filter(function(p){
+      if(!passeTexte(p, etat.q)) return false;
+      return GROUPES.every(function(g){
+        return g.cle === sauf ? true : passeGroupe(p, g.cle);
+      });
+    });
+  }
+
+  function nbActifs(){
+    var n = GROUPES.reduce(function(a,g){ return a + etat[g.cle].length; }, 0);
+    return n + (etat.q ? 1 : 0);
+  }
+
+  /* --------------------------------------------------------------- URL --- */
+
+  function ecrireURL(){
+    var p = new URLSearchParams();
+    if(etat.q) p.set('q', etat.q);
+    GROUPES.forEach(function(g){
+      if(etat[g.cle].length) p.set(g.cle, etat[g.cle].map(slug).join(','));
+    });
+    var s = p.toString();
+    history.replaceState(null, '', s ? '?' + s + location.hash : location.pathname + location.hash);
+  }
+
+  function lireURL(){
+    var p = new URLSearchParams(location.search);
+    etat.q = p.get('q') || '';
+    GROUPES.forEach(function(g){
+      var brut = p.get(g.cle);
+      if(!brut){ etat[g.cle] = []; return; }
+      var demandes = brut.split(',');
+      /* On ne garde que des valeurs réellement présentes dans la donnée :
+         une URL trafiquée ne peut pas injecter de facette fantôme. */
+      etat[g.cle] = valeursDe(g.cle).filter(function(v){
+        return demandes.indexOf(slug(v)) !== -1;
+      });
+    });
+  }
+
+  /* ------------------------------------------------------ rendu facettes */
+
+  function construireFacettes(hote){
+    hote.textContent = '';
+    GROUPES.forEach(function(g){
+      var valeurs = valeursDe(g.cle);
+      if(!valeurs.length) return;                       /* facette vide = pas de bloc */
+
+      var restant = filtrer(g.cle);
+      var fs = el('fieldset','groupe');
+      var lg = el('legend','etiquette groupe__titre', g.titre);
+      fs.appendChild(lg);
+
+      var puces = el('div','puces');
+      valeurs.forEach(function(v){
+        var n = restant.filter(function(p){
+          return valeursPour(p, g.cle).indexOf(v) !== -1;
+        }).length;
+
+        var lab = el('label','puce');
+        var inp = document.createElement('input');
+        inp.type = 'checkbox';
+        inp.className = 'puce__case';
+        inp.value = v;
+        inp.checked = etat[g.cle].indexOf(v) !== -1;
+        inp.disabled = (n === 0 && !inp.checked);
+        inp.addEventListener('change', function(){
+          var sel = etat[g.cle].slice();
+          var i = sel.indexOf(v);
+          if(inp.checked){ if(i === -1) sel.push(v); }
+          else if(i !== -1){ sel.splice(i,1); }
+          etat[g.cle] = sel;
+          appliquer();
+        });
+
+        var sp = el('span','puce__texte');
+        sp.appendChild(document.createTextNode(libelle(g.cle, v)));
+        sp.appendChild(el('span','puce__nombre', String(n)));
+
+        lab.appendChild(inp);
+        lab.appendChild(sp);
+        puces.appendChild(lab);
+      });
+
+      fs.appendChild(puces);
+      hote.appendChild(fs);
+    });
+  }
+
+  /* --------------------------------------------------------- rendu grille */
+
+  var grille   = document.getElementById('grille');
+  var vide     = document.getElementById('vide');
+  var compteur = document.getElementById('compteur');
+  var premierRendu = true;
+
+  function carte(p, i){
+    var li = el('li','grille__case');
+    var b  = el('button','entree');
+    b.type = 'button';
+    b.style.setProperty('--i', String(Math.min(i, 11)));
+    b.setAttribute('data-slug', p.slug);
+    b.setAttribute('aria-haspopup','dialog');
+
+    b.appendChild(el('span','entree__marque', p.marque));
+    b.appendChild(el('span','entree__nom', p.nom));
+
+    if(p.nouveaute) b.appendChild(el('span','entree__drapeau','Nouveauté'));
+    if(p.editionLimitee) b.appendChild(el('span','entree__drapeau','Édition limitée'));
+
+    b.appendChild(el('span','entree__meta',
+      (LIB_FAMILLE[p.famille] || p.famille) + ' · ' + (LIB_GENRE[p.genre] || p.genre)));
+
+    var pied = el('div','entree__pied');
+    pied.appendChild(el('span','entree__conc', p.concentration));
+    var pr = prixOuContact(p);
+    pied.appendChild(el('span','entree__prix' + (pr.type === 'contact' ? ' entree__prix--contact' : ''), pr.texte));
+    b.appendChild(pied);
+
+    b.addEventListener('click', function(){ ouvrirFiche(p, b); });
+    li.appendChild(b);
+    return li;
+  }
+
+  function rendreGrille(liste){
+    grille.textContent = '';
+    /* Le stagger n'a lieu qu'au PREMIER rendu. Filtrer est un geste répété :
+       l'animer rendrait le catalogue plus lent à l'usage. (emil-design-eng) */
+    grille.classList.toggle('grille--entree', premierRendu);
+    var frag = document.createDocumentFragment();
+    liste.forEach(function(p, i){ frag.appendChild(carte(p, i)); });
+    grille.appendChild(frag);
+
+    var rien = liste.length === 0;
+    grille.hidden = rien;
+    vide.hidden = !rien;
+
+    var total = CATALOGUE.length;
+    compteur.textContent = rien
+      ? 'Aucune référence sur ' + total
+      : (liste.length === total
+          ? total + ' références en ligne'
+          : liste.length + ' référence' + (liste.length > 1 ? 's' : '') + ' sur ' + total);
+    premierRendu = false;
+  }
+
+  /* -------------------------------------------------------- application */
+
+  var champQ  = document.getElementById('q');
+  var viderQ  = document.getElementById('vider-q');
+  var hoteFac = document.getElementById('facettes');
+  var compteActifs = document.getElementById('compte-actifs');
+  var boutonAppliquer = document.getElementById('feuille-appliquer');
+
+  function appliquer(){
+    var liste = filtrer(null);
+    rendreGrille(liste);
+    construireFacettes(hoteFac);
+    if(champQ.value !== etat.q) champQ.value = etat.q;
+    viderQ.setAttribute('data-visible', etat.q ? 'oui' : 'non');
+
+    var n = nbActifs();
+    compteActifs.hidden = n === 0;
+    compteActifs.textContent = String(n);
+    boutonAppliquer.textContent = liste.length === 0
+      ? 'Aucun résultat'
+      : 'Voir ' + liste.length + ' référence' + (liste.length > 1 ? 's' : '');
+
+    ecrireURL();
+  }
+
+  function toutEffacer(){
+    etat.q = '';
+    GROUPES.forEach(function(g){ etat[g.cle] = []; });
+    appliquer();
+  }
+
+  var minuteurQ;
+  champQ.addEventListener('input', function(){
+    clearTimeout(minuteurQ);
+    minuteurQ = setTimeout(function(){ etat.q = champQ.value.trim(); appliquer(); }, 140);
+  });
+  viderQ.addEventListener('click', function(){
+    champQ.value = ''; etat.q = ''; appliquer(); champQ.focus();
+  });
+  document.getElementById('filtres').addEventListener('submit', function(e){ e.preventDefault(); });
+  document.getElementById('tout-effacer').addEventListener('click', toutEffacer);
+  document.getElementById('vide-effacer').addEventListener('click', toutEffacer);
+
+  /* ------------------------------------------------------------- fiche */
+
+  var fiche = document.getElementById('fiche');
+
+  function ouvrirFiche(p, origine){
+    document.getElementById('fiche-marque').textContent = p.marque;
+    document.getElementById('fiche-nom').textContent = p.nom;
+
+    var attrs = document.getElementById('fiche-attributs');
+    attrs.textContent = '';
+    [LIB_FAMILLE[p.famille] || p.famille,
+     LIB_GENRE[p.genre] || p.genre,
+     p.concentration,
+     String(p.annee)].forEach(function(t){
+      attrs.appendChild(el('li','fiche__attribut', t));
+    });
+
+    document.getElementById('fiche-description').textContent = p.description;
+
+    var pyr = document.getElementById('fiche-pyramide');
+    pyr.textContent = '';
+    ['tete','coeur','fond'].forEach(function(k){
+      var etage = el('div','etage');
+      etage.appendChild(el('dt','etiquette etage__nom', LIB_ETAGE[k]));
+      etage.appendChild(el('dd','etage__notes', p.notes[k].join(', ')));
+      pyr.appendChild(etage);
+    });
+
+    var ligne = document.getElementById('fiche-ligne-prix');
+    ligne.textContent = '';
+    var pr = prixOuContact(p);
+    if(pr.type === 'prix'){
+      ligne.appendChild(el('p','fiche__prix', pr.texte));
+    } else {
+      ligne.appendChild(el('p','fiche__prix--contact',
+        'Prix communiqué en boutique — les tarifs évoluent selon le format et l\'arrivage.'));
+    }
+    var cta = el('a','bouton','Demander cette référence');
+    cta.href = BOUTIQUE.telephone ? 'tel:' + String(BOUTIQUE.telephone).replace(/\s/g,'') : '#boutique';
+    if(!BOUTIQUE.telephone){
+      cta.addEventListener('click', function(){ fermerFiche(); });
+    }
+    ligne.appendChild(cta);
+
+    var src = document.getElementById('fiche-source');
+    src.textContent = '';
+    if(p.source){
+      src.appendChild(document.createTextNode('Composition publiée — '));
+      var a = el('a', null, 'voir la fiche technique');
+      a.href = p.source; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      src.appendChild(a);
+    }
+
+    /* Origine du mouvement : la fiche paraît sortir de la carte cliquée. */
+    if(origine && origine.getBoundingClientRect){
+      var r = origine.getBoundingClientRect();
+      fiche.style.setProperty('--origine-x',
+        Math.round(((r.left + r.width/2) / window.innerWidth) * 100) + '%');
+      fiche.style.setProperty('--origine-y',
+        Math.round(((r.top + r.height/2) / window.innerHeight) * 100) + '%');
+    }
+    fiche.classList.remove('ferme');
+    fiche.showModal();
+    fiche.scrollTop = 0;
+  }
+
+  function fermerFiche(){
+    if(!fiche.open) return;
+    var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduit){ fiche.close(); return; }
+    fiche.classList.add('ferme');
+    setTimeout(function(){ fiche.classList.remove('ferme'); fiche.close(); }, 150);
+  }
+  document.getElementById('fiche-fermer').addEventListener('click', fermerFiche);
+  fiche.addEventListener('click', function(e){ if(e.target === fiche) fermerFiche(); });
+
+  /* ------------------------------------------------- feuille de filtres */
+
+  var feuille = document.getElementById('feuille');
+  var corpsFeuille = document.getElementById('feuille-corps');
+  var ancreFiltres = document.getElementById('ancre-filtres');
+  var panneau = document.getElementById('filtres');
+
+  /* Un SEUL panneau de filtres, déplacé entre le rail et la feuille : pas de
+     duplication, donc pas de désynchronisation possible entre les deux. */
+  function ouvrirFeuille(){
+    corpsFeuille.appendChild(panneau);
+    feuille.classList.remove('ferme');
+    feuille.showModal();
+  }
+  function fermerFeuille(){
+    if(!feuille.open) return;
+    var fin = function(){
+      feuille.classList.remove('ferme');
+      feuille.close();
+      ancreFiltres.appendChild(panneau);
+    };
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ fin(); return; }
+    feuille.classList.add('ferme');
+    setTimeout(fin, 200);
+  }
+  document.getElementById('ouvrir-filtres').addEventListener('click', ouvrirFeuille);
+  document.getElementById('feuille-fermer').addEventListener('click', fermerFeuille);
+  boutonAppliquer.addEventListener('click', fermerFeuille);
+  feuille.addEventListener('click', function(e){ if(e.target === feuille) fermerFeuille(); });
+  feuille.addEventListener('cancel', function(e){ e.preventDefault(); fermerFeuille(); });
+
+  /* Retour au desktop pendant que la feuille est ouverte : on la referme et on
+     rend le panneau au rail, sinon les filtres disparaîtraient de la page. */
+  var mqDesktop = window.matchMedia('(min-width: 900px)');
+  function surChangementLargeur(e){ if(e.matches && feuille.open) fermerFeuille(); }
+  if(mqDesktop.addEventListener) mqDesktop.addEventListener('change', surChangementLargeur);
+  else if(mqDesktop.addListener) mqDesktop.addListener(surChangementLargeur);
+
+  /* --------------------------------------------------- hero : les maisons */
+
+  function rendreMaisons(){
+    var hote = document.getElementById('maisons-liste');
+    hote.textContent = '';
+    valeursDe('marque').forEach(function(m){
+      var li = document.createElement('li');
+      var b = el('button','maisons__bouton', m);
+      b.type = 'button';
+      b.addEventListener('click', function(){
+        etat.marque = [m];
+        appliquer();
+        document.getElementById('catalogue').scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+          block: 'start'
+        });
+      });
+      li.appendChild(b);
+      hote.appendChild(li);
+    });
+  }
+
+  /* ------------------------------------------------------ maison du mois */
+
+  function rendreMDM(){
+    if(!MDM) return;
+    document.getElementById('mdm-nom').textContent = MDM.marque;
+    document.getElementById('mdm-origine').textContent = MDM.origine || '';
+    document.getElementById('mdm-texte').textContent = MDM.texte || '';
+
+    var hote = document.getElementById('mdm-selection');
+    hote.textContent = '';
+    (MDM.parfums || []).forEach(function(s){
+      var p = CATALOGUE.filter(function(x){ return x.slug === s; })[0];
+      if(!p) return;                                    /* slug obsolète : ignoré */
+      var li = el('li','editorial__item');
+      var b = el('button','editorial__bouton');
+      b.type = 'button';
+      b.setAttribute('aria-haspopup','dialog');
+      b.appendChild(el('span','editorial__item-nom', p.nom));
+      b.appendChild(el('span','editorial__item-meta',
+        (LIB_FAMILLE[p.famille] || p.famille) + ' · ' + p.concentration));
+      b.addEventListener('click', function(){ ouvrirFiche(p, b); });
+      li.appendChild(b);
+      hote.appendChild(li);
+    });
+  }
+
+  /* ------------------------------------------------------------ boutique */
+
+  /* Une valeur absente s'affiche « à confirmer » — jamais inventée.
+     Renseigner le champ dans catalogue.js la fait apparaître, sans autre code. */
+  function valeurOuAConfirmer(v, lien){
+    if(v == null || v === ''){
+      var s = el('span','a-confirmer','à confirmer');
+      return s;
+    }
+    if(lien){
+      var a = el('a', null, String(v));
+      a.href = lien;
+      return a;
+    }
+    return document.createTextNode(String(v));
+  }
+
+  function ligneInfo(cle, noeud){
+    var d = el('div','infos__ligne');
+    d.appendChild(el('dt','etiquette infos__cle', cle));
+    var dd = el('dd','infos__valeur');
+    dd.appendChild(noeud);
+    d.appendChild(dd);
+    return d;
+  }
+
+  function rendreBoutique(){
+    document.getElementById('boutique-invitation').textContent =
+      BOUTIQUE.invitation || BOUTIQUE.accroche || '';
+
+    var hote = document.getElementById('boutique-infos');
+    hote.textContent = '';
+
+    var adresse = null;
+    if(BOUTIQUE.adresse){
+      adresse = [BOUTIQUE.adresse, [BOUTIQUE.codePostal, BOUTIQUE.ville].filter(Boolean).join(' ')]
+        .filter(Boolean).join(', ');
+    }
+    hote.appendChild(ligneInfo('Adresse', valeurOuAConfirmer(adresse)));
+
+    var horaires;
+    if(Array.isArray(BOUTIQUE.horaires) && BOUTIQUE.horaires.length){
+      horaires = document.createDocumentFragment();
+      BOUTIQUE.horaires.forEach(function(h){
+        horaires.appendChild(el('span', null, h.jours + ' — ' + h.heures));
+        horaires.appendChild(document.createElement('br'));
+      });
+    } else {
+      horaires = valeurOuAConfirmer(null);
+    }
+    hote.appendChild(ligneInfo('Horaires', horaires));
+
+    hote.appendChild(ligneInfo('Téléphone', valeurOuAConfirmer(
+      BOUTIQUE.telephone,
+      BOUTIQUE.telephone ? 'tel:' + String(BOUTIQUE.telephone).replace(/\s/g,'') : null)));
+
+    hote.appendChild(ligneInfo('Instagram', valeurOuAConfirmer(
+      BOUTIQUE.instagram ? '@' + String(BOUTIQUE.instagram).replace(/^@/,'') : null,
+      BOUTIQUE.instagram ? 'https://instagram.com/' + String(BOUTIQUE.instagram).replace(/^@/,'') : null)));
+
+    /* Pied de page : mêmes valeurs, même règle. */
+    var liens = document.getElementById('pied-liens');
+    liens.textContent = '';
+    [['Catalogue','#catalogue'], ['La maison du mois','#maison-du-mois'], ['La boutique','#boutique']]
+      .forEach(function(pair){
+        var li = document.createElement('li');
+        var a = el('a','pied__lien', pair[0]);
+        a.href = pair[1];
+        li.appendChild(a);
+        liens.appendChild(li);
+      });
+    if(BOUTIQUE.telephone){
+      var li2 = document.createElement('li');
+      var a2 = el('a','pied__lien', BOUTIQUE.telephone);
+      a2.href = 'tel:' + String(BOUTIQUE.telephone).replace(/\s/g,'');
+      li2.appendChild(a2);
+      liens.appendChild(li2);
+    }
+  }
+
+  /* ---------------------------------------------------------- démarrage */
+
+  lireURL();
+  rendreMaisons();
+  rendreMDM();
+  rendreBoutique();
+  appliquer();
+
+  window.addEventListener('popstate', function(){ lireURL(); appliquer(); });
+
+})();
+</script>
+</body>
+</html>

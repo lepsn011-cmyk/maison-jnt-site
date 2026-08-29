@@ -1,72 +1,93 @@
-# project-bootstrap
+# Maison JNT — site vitrine
 
-Point de départ portable pour tout nouveau site vitrine premium : la méthode
-d'agence (`CLAUDE.md`) + les skills réellement utilisés, dans le format exact
-que Claude Code attend — pas une archive de référence à relire à la main.
+Boutique de parfums indépendante et multi-marques. Site vitrine statique :
+**aucune vente en ligne**, aucun panier, aucun back-office. L'objectif est de
+faire venir en boutique.
 
-Ce dépôt existe parce qu'une session cloud (GitHub-connectée, ex. depuis
-iPad) démarre à vide : elle ne voit ni `C:\Users\adamt\CLAUDE.md`, ni
-`~/.claude/skills/`, ni `~/.agents/skills/` — ces chemins n'existent que sur
-la machine locale. Ce dépôt rend portable ce qui, sans lui, resterait
-prisonnier d'un seul PC.
+## Ouvrir le site
 
-## Contenu
+Double-cliquez sur `index.html`. Rien à installer, rien à compiler — la donnée
+est chargée par `<script src>` et non par `fetch()`, précisément pour que
+l'ouverture directe depuis le disque fonctionne.
 
+## Modifier le catalogue
+
+**Tout se passe dans `catalogue.js`.** `index.html` ne contient aucun nom de
+parfum en dur : ajouter, retirer ou modifier une référence dans ce seul fichier
+suffit, sans toucher au code.
+
+Une entrée ressemble à ceci :
+
+```js
+{
+  slug: 'lattafa-khamrah',        // identifiant unique, sans accent ni espace
+  nom: 'Khamrah',
+  marque: 'Lattafa',
+  annee: 2022,
+  genre: 'mixte',                 // homme | femme | mixte
+  concentration: 'EDP',           // EDT | EDP | Extrait
+  famille: 'ambree',              // florale|boisee|ambree|hesperidee|fougere|chypree
+  nouveaute: false,
+  editionLimitee: false,
+  prix: null,                     // null → « Prix en boutique » ; 89 → « 89 € »
+  notes: { tete: [...], coeur: [...], fond: [...] },
+  description: '…',
+  source: 'https://…'             // d'où vient la pyramide (traçabilité)
+}
 ```
-CLAUDE.md                          <- copie verbatim de C:\Users\adamt\CLAUDE.md
-.claude/skills/
-  impeccable/                      <- polish, audit, critique, palette...
-  ui-ux-pro-max/                   <- styles, palettes, pairings typo, layout
-  emil-design-eng/                 <- micro-interactions, motion
-  webapp-testing/                  <- pipeline Playwright de vérification
-  find-skills/                     <- découverte de skills installées
-  review-animations/               <- audit d'animations
-  animation-vocabulary/            <- glossaire terme <-> effet
-docs/
-  PORTABILITY.md                   <- ce qui ne fonctionne PAS à l'identique en cloud
-  SKILLS-INVENTAIRE.md             <- état des lieux complet au 2026-08 (racine, tous les skills trouvés)
+
+Points à connaître :
+
+- **Les filtres se construisent tout seuls** à partir de la donnée. Ajoutez une
+  marque : sa puce apparaît. Passez une référence en `editionLimitee: true` : la
+  puce « Édition limitée » apparaît, alors qu'elle est absente aujourd'hui
+  puisque aucune référence ne la porte.
+- **Les prix sont optionnels par conception.** `prix: null` affiche « Prix en
+  boutique » ; un nombre affiche le montant formaté. Il n'y a jamais de
+  « 0 € » ni de case vide.
+- La section « La maison du mois » se pilote par l'objet `MAISON_DU_MOIS`, en bas
+  du même fichier. Un `slug` qui n'existe plus est simplement ignoré.
+
+## Renseigner la boutique
+
+Objet `BOUTIQUE`, en bas de `catalogue.js`. Les champs à `null` s'affichent
+« à confirmer » sur le site — ils n'ont pas été inventés. Renseignez la valeur,
+elle apparaît immédiatement :
+
+```js
+telephone: '01 23 45 67 89',
+horaires: [{ jours: 'Lundi – Samedi', heures: '10h – 19h30' }],
 ```
 
-`.claude/skills/<nom>/SKILL.md` est la convention réelle de Claude Code pour
-un skill de PROJET : une fois ces fichiers dans un dépôt, n'importe quelle
-session Claude Code qui travaille dans ce dépôt (locale ou cloud) les
-reconnaît et peut les invoquer directement — ce n'est pas un simple texte de
-référence à copier-coller.
+Restent à fournir : **adresse, horaires, téléphone, pseudo Instagram** (la bio
+Instagram transmise était tronquée sur la capture), plus le **fichier logo** et
+la **photo d'intérieur** — voir `assets/README.md`.
 
-## Démarrer un nouveau projet (ex. Maison JNT)
+## Vérifier avant de mettre en ligne
 
-**Méthode recommandée — dépôt modèle GitHub, marche depuis n'importe où y
-compris l'iPad, aucune ligne de commande requise :**
+```bash
+pip install playwright pillow      # une seule fois
+python3 outils/qa.py               # contrôle complet, chiffré
+python3 outils/shoot.py --out /tmp/vue.png --width 375
+```
 
-1. Sur la page GitHub de `project-bootstrap`, active **Settings → Template
-   repository** (case à cocher, une fois, voir note plus bas — je ne peux
-   pas le faire moi-même sans authentification `gh`).
-2. Pour chaque nouveau projet : bouton vert **« Use this template » → « Create
-   a new repository »** en haut de la page du dépôt. Fonctionne à l'identique
-   sur mobile Safari.
-3. Nomme le nouveau dépôt (`maison-jnt-site`), crée-le.
-4. Clone-le (ou ouvre-le directement dans une session cloud connectée à
-   GitHub) : `CLAUDE.md` et `.claude/skills/` sont déjà à la racine, prêts à
-   l'emploi — pas de fusion, pas de copie manuelle.
-5. Supprime ensuite `README.md` et `docs/` (propres à *ce* dépôt, pas au
-   site) une fois le nouveau projet initialisé, et adapte `CLAUDE.md` si le
-   nouveau projet justifie un écart (voir sa Note finale : « une raison
-   locale spécifique et vérifiée gagne »).
+`outils/qa.py` mesure — il n'estime pas : contraste composite au pixel,
+débordement horizontal, cibles tactiles, console, mouvement réduit, glyphes sans
+encre, et l'absence des termes e-commerce écartés par le client. Sortie `OK` /
+`FAIL` avec la valeur pour chaque contrôle.
 
-**Méthode alternative, si le mode template n'est pas activé :** clone
-`project-bootstrap` dans un dossier temporaire, copie `CLAUDE.md` et
-`.claude/` à la racine du nouveau dépôt, committe. Un peu plus de gestes,
-même résultat.
+## Mise en ligne
 
-**Ce qui NE marche PAS de façon fiable : cloner `project-bootstrap` à côté du
-projet (dossier frère).** Claude Code charge `CLAUDE.md`/`.claude/skills`
-depuis le répertoire du projet en cours et ses parents — pas depuis un
-dossier voisin sans lien. Un clone côte à côte resterait invisible tant que
-son contenu n'est pas copié DANS l'arbre du projet. D'où la méthode
-« template » ci-dessus.
+Site statique sans étape de compilation : déposez le dossier sur Netlify (ou
+équivalent) avec `index.html` à la racine et `.` comme dossier de publication.
 
-## Avant d'utiliser sur un vrai projet
+Attention à un malentendu fréquent : **rendre le dépôt GitHub privé ne rend pas
+le site en ligne privé.** Ce sont deux choses distinctes.
 
-Lis `docs/PORTABILITY.md` — trois skills ont des dépendances d'environnement
-réelles (scripts Node, Playwright, un MCP optionnel) qui ne sont pas garanties
-disponibles telles quelles dans une session cloud fraîche.
+## Documents du projet
+
+| Fichier | Contenu |
+|---|---|
+| `PRODUCT.md` | Registre, utilisateurs, personnalité de marque, anti-références |
+| `DESIGN.md` | Palette, typographie, densité, budget d'animation, interdits |
+| `CLAUDE.md` | Méthode d'agence, dont §9 : les écarts propres à ce projet |
