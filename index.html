@@ -661,7 +661,7 @@ a{ color: inherit; }
   justify-content: center;
 }
 .entree__media{ margin-bottom: 14px; }
-.fiche__media{ aspect-ratio: 4 / 3; max-height: 300px; margin-bottom: 22px; }
+.fiche__media{ aspect-ratio: 1 / 1; max-height: 300px; margin-bottom: 22px; }
 
 .entree__media img,
 .fiche__media img{
@@ -1389,6 +1389,7 @@ a{ color: inherit; }
   var CATALOGUE = window.CATALOGUE || [];
   var BOUTIQUE  = window.BOUTIQUE  || {};
   var MDM       = window.MAISON_DU_MOIS || null;
+  var DECORS    = window.DECORS || {};
 
   /* --------------------------------------------------------- libellés --- */
 
@@ -1613,22 +1614,40 @@ a{ color: inherit; }
      dégraderait la grille : elle reste alors purement typographique, dense,
      telle qu'elle a été validée. Le premier fichier déposé la fait apparaître
      partout, sans toucher au code. */
-  var A_DES_PHOTOS = CATALOGUE.some(function(p){ return !!p.photo; });
+  var A_DES_PHOTOS = CATALOGUE.some(function(p){ return !!visuel(p); });
+
+  /* Une photo propre à la référence l'emporte ; sinon le décor de sa famille.
+     Rien en dur dans les entrées : ajouter une référence lui donne son décor. */
+  function visuel(p){ return p.photo || DECORS[p.famille] || null; }
 
   function media(p, classe){
     var boite = el('div', classe);
-    if(p.photo){
-      var img = document.createElement('img');
-      img.src = p.photo;
-      img.alt = 'Flacon de ' + p.nom + ', ' + p.marque;
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      boite.appendChild(img);
-    } else {
+    var src = visuel(p);
+    function attente(){
       var a = el('div','attente');
       a.appendChild(el('span','attente__trait'));
       a.appendChild(el('span','attente__mot','Photo à venir'));
-      boite.appendChild(a);
+      return a;
+    }
+    if(src){
+      var img = document.createElement('img');
+      img.src = src;
+      /* Le décor illustre la FAMILLE, pas le flacon : l'alt doit le dire, sinon
+         il décrit une image qui n'existe pas. */
+      img.alt = p.photo
+        ? 'Flacon de ' + p.nom + ', ' + p.marque
+        : 'Mise en scène des notes de la famille ' + (LIB_FAMILLE[p.famille] || p.famille);
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      /* Décor pas encore livré : on retombe sur l'emplacement nommé plutôt que
+         de laisser un cadre vide. */
+      img.addEventListener('error', function(){
+        boite.textContent = '';
+        boite.appendChild(attente());
+      });
+      boite.appendChild(img);
+    } else {
+      boite.appendChild(attente());
     }
     return boite;
   }
@@ -1743,7 +1762,7 @@ a{ color: inherit; }
        panneau « photo à venir » pleine largeur y repoussait la pyramide
        olfactive — la pièce maîtresse — sous la ligne de flottaison. La grille
        suffit à signaler l'attente. */
-    if(p.photo) corps.insertBefore(media(p, 'fiche__media'), corps.firstChild);
+    if(visuel(p)) corps.insertBefore(media(p, 'fiche__media'), corps.firstChild);
 
     var attrs = document.getElementById('fiche-attributs');
     attrs.textContent = '';

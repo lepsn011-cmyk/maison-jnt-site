@@ -312,7 +312,9 @@ def controler_assets():
          f'require({json.dumps(os.path.join(RACINE, "catalogue.js"))});'
          'console.log(JSON.stringify({'
          '  produits: (window.CATALOGUE||[]).map(p => [p.slug, p.photo]),'
-         '  boutique: (window.BOUTIQUE||{}).photo || null'
+         '  boutique: (window.BOUTIQUE||{}).photo || null,'
+         '  decors: Object.entries(window.DECORS||{}),'
+         '  familles: [...new Set((window.CATALOGUE||[]).map(p => p.famille))]'
          '}));'],
         capture_output=True, text=True, cwd=RACINE)
     if extrait.returncode != 0:
@@ -330,6 +332,25 @@ def controler_assets():
         note('photos produit sur le disque', not manquantes,
              f'{len(declarees) - len(manquantes)}/{len(declarees)} trouvées'
              + (f' — MANQUE {[m[0] for m in manquantes][:3]}' if manquantes else ''))
+
+    # Décors de famille. Ils sont générés hors de cet environnement (crédits +
+    # egress bloqués) : tant qu'ils ne sont pas déposés, l'absence est TOLÉRÉE —
+    # la carte retombe sur l'emplacement nommé. Jamais silencieux pour autant.
+    decors = data.get('decors') or []
+    familles = set(data.get('familles') or [])
+    if decors:
+        presents = [(f, c) for f, c in decors if os.path.isfile(os.path.join(RACINE, c))]
+        absents = [f for f, c in decors if not os.path.isfile(os.path.join(RACINE, c))]
+        note('décors de famille', not absents,
+             f'{len(presents)}/{len(decors)} présents'
+             + (f' — en attente : {absents}' if absents else ''),
+             tolere=bool(absents))
+        # Une famille du catalogue sans entrée dans DECORS n'aurait jamais de
+        # visuel : c'est un vrai défaut, pas une attente.
+        couvertes = {f for f, _ in decors}
+        orphelines = sorted(familles - couvertes)
+        note('familles couvertes par un décor', not orphelines,
+             'toutes' if not orphelines else f'SANS DÉCOR : {orphelines}')
 
     # La photo de boutique est annoncée avant d'exister : c'est voulu (le site
     # affiche un emplacement nommé). Signalé, mais toléré tant qu'elle manque.

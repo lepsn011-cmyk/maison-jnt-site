@@ -561,6 +561,27 @@ window.CATALOGUE = [
 ];
 
 /* ============================================================================
+   LES DÉCORS PAR FAMILLE OLFACTIVE
+   ----------------------------------------------------------------------------
+   Une image de mise en scène par famille, pas par référence : deux orientaux
+   ambrés partagent le même univers, et c'est voulu — une direction artistique
+   traite les familles comme des mondes, pas comme 24 décors à varier.
+
+   La résolution se fait PAR FAMILLE. Une référence ajoutée hérite donc
+   automatiquement de son décor, sans qu'on touche à son entrée.
+
+   Les fichiers sont produits par `outils/decors.py` à partir des images
+   déposées dans assets/sources/decors/. Tant qu'un décor manque, la carte
+   retombe sur l'emplacement « photo à venir » — jamais sur un cadre vide.
+
+   Les décors ne montrent AUCUN flacon : ils mettent en scène les NOTES du
+   parfum. Générer un flacon de marque produirait une approximation publiée
+   comme étant le stock du client, devant des gens qui se déplacent ensuite
+   en boutique.
+   ========================================================================== */
+window.DECORS = {};
+
+/* ============================================================================
    LA MAISON DU MOIS — section éditoriale
    Change de marque au gré du client. `parfums` liste des `slug` du catalogue :
    si un slug n'existe plus, il est simplement ignoré à l'affichage.
