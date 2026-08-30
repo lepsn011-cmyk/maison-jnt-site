@@ -1,0 +1,11 @@
+{
+  "boutique": {
+    "source": "assets/sources/boutique-interieur-source.jpg",
+    "boite": [0, 120, 766, 897],
+    "ratio": [4, 5],
+    "largeur": 1000,
+    "sortie": "assets/boutique-interieur.jpg",
+    "note": "boite calee sous le bandeau de story 'il y a 4 jours' du haut de la capture"
+  },
+  "parfums": []
+}

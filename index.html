@@ -1019,6 +1019,14 @@ a{ color: inherit; }
 
 /* Placeholder patterné, nom de fichier affiché en clair, ratio réservé :
    zéro décalage à l'intégration de la vraie photo. (CLAUDE.md §2 Phase 2) */
+.boutique__photo{
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  object-fit: cover;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+}
+
 .photo-attendue{
   aspect-ratio: 4 / 5;
   display: flex;
@@ -1289,13 +1297,7 @@ a{ color: inherit; }
   <!-- ==================================================================== -->
   <section class="section boutique" id="boutique" aria-labelledby="boutique-titre">
     <div class="enveloppe boutique__grille">
-      <div class="photo-attendue">
-        <p class="etiquette">Photo de la boutique</p>
-        <p class="photo-attendue__nom">assets/boutique-interieur.jpg</p>
-        <p class="photo-attendue__mot">
-          Emplacement réservé au ratio définitif : la vraie photo s'intègre sans décaler la page.
-        </p>
-      </div>
+      <div id="boutique-photo"></div>
 
       <div>
         <p class="etiquette">La boutique</p>
@@ -1920,6 +1922,35 @@ a{ color: inherit; }
   }
 
   function rendreBoutique(){
+    /* Photo réelle si le fichier répond, emplacement nommé sinon. Le repli est
+       branché sur onerror : un chemin mort n'affiche jamais un cadre vide. */
+    var hotePhoto = document.getElementById('boutique-photo');
+    hotePhoto.textContent = '';
+    function emplacementAttendu(){
+      var d = el('div','photo-attendue');
+      d.appendChild(el('p','etiquette','Photo de la boutique'));
+      d.appendChild(el('p','photo-attendue__nom',
+        BOUTIQUE.photo || 'assets/boutique-interieur.jpg'));
+      d.appendChild(el('p','photo-attendue__mot',
+        "Emplacement réservé au ratio définitif : la vraie photo s'intègre sans décaler la page."));
+      return d;
+    }
+    if(BOUTIQUE.photo){
+      var ph = document.createElement('img');
+      ph.className = 'boutique__photo';
+      ph.src = BOUTIQUE.photo;
+      ph.alt = "Intérieur de la boutique Maison JNT : murs de flacons et comptoir";
+      ph.loading = 'lazy';
+      ph.decoding = 'async';
+      ph.addEventListener('error', function(){
+        hotePhoto.textContent = '';
+        hotePhoto.appendChild(emplacementAttendu());
+      });
+      hotePhoto.appendChild(ph);
+    } else {
+      hotePhoto.appendChild(emplacementAttendu());
+    }
+
     document.getElementById('boutique-invitation').textContent =
       BOUTIQUE.invitation || BOUTIQUE.accroche || '';
 

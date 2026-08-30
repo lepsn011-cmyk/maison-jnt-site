@@ -342,12 +342,19 @@ def controler_assets():
 
     # Format RÉEL, jamais l'extension : un .jpg peut être un PNG renommé
     # (déjà rencontré : 12,3 Mo pour 5 images).
-    mauvais, total = [], 0
+    # Le poids qui compte est celui SERVI au visiteur. assets/sources/ contient
+    # les originaux du client, versionnés pour rendre les découpes refaisables,
+    # mais jamais chargés par la page : les compter fausserait le budget.
+    mauvais, servi, sources = [], 0, 0
     dossier = os.path.join(RACINE, 'assets')
     for base, _, fichiers in os.walk(dossier):
+        est_source = os.path.join('assets', 'sources') in base
         for f in fichiers:
             chemin = os.path.join(base, f)
-            total += os.path.getsize(chemin)
+            if est_source:
+                sources += os.path.getsize(chemin)
+            else:
+                servi += os.path.getsize(chemin)
             if not f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
                 continue
             try:
@@ -361,7 +368,9 @@ def controler_assets():
                 mauvais.append(f'{f} illisible ({e})')
     note('format réel des images', not mauvais,
          'conforme à l\'extension' if not mauvais else f'INCOHÉRENT : {mauvais[:3]}')
-    note('poids de assets/', total < 2 * 1024 * 1024, f'{total / 1024:.0f} Ko (plafond 2 Mo)')
+    note('poids servi au visiteur', servi < 2 * 1024 * 1024,
+         f'{servi / 1024:.0f} Ko (plafond 2 Mo) — plus {sources / 1024:.0f} Ko '
+         f'de sources non servies')
     print()
 
 

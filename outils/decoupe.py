@@ -85,8 +85,44 @@ def main():
         }], indent=2, ensure_ascii=False))
         return 0
 
-    decoupes = json.load(open(BOITES, encoding='utf-8'))
+    brut = json.load(open(BOITES, encoding='utf-8'))
+    decoupes = brut if isinstance(brut, list) else brut.get('parfums', [])
+    boutique = None if isinstance(brut, list) else brut.get('boutique')
     caches, erreurs, faits = {}, [], []
+
+    # --- Photo de boutique : ratio et sortie propres, pas un carré produit.
+    if boutique:
+        chemin = os.path.join(RACINE, boutique['source'])
+        if not os.path.isfile(chemin):
+            erreurs.append(f"boutique : source absente ({boutique['source']})")
+        else:
+            im = Image.open(chemin)
+            print(f'{GRIS}source {boutique["source"]} — {im.format} '
+                  f'{im.size[0]}×{im.size[1]}{RAZ}')
+            im = im.convert('RGB')
+            x, y, w, h = boutique['boite']
+            zone = im.crop((x, y, x + w, y + h))
+            rw, rh = boutique.get('ratio', [4, 5])
+            # Recadre au ratio visé sans jamais déformer la scène.
+            vise = rw / rh
+            if zone.width / zone.height > vise:
+                nw = int(zone.height * vise)
+                g = (zone.width - nw) // 2
+                zone = zone.crop((g, 0, g + nw, zone.height))
+            else:
+                nh = int(zone.width / vise)
+                t = (zone.height - nh) // 2
+                zone = zone.crop((0, t, zone.width, t + nh))
+            largeur = boutique.get('largeur', 1000)
+            zone = zone.resize((largeur, int(largeur / vise)), Image.LANCZOS)
+            sortie = os.path.join(RACINE, boutique['sortie'])
+            os.makedirs(os.path.dirname(sortie), exist_ok=True)
+            if not a.verifier:
+                zone.save(sortie, 'JPEG', quality=QUALITE, optimize=True, progressive=True)
+                faits.append(f"boutique : {zone.size[0]}×{zone.size[1]}, "
+                             f"{os.path.getsize(sortie) / 1024:.0f} Ko")
+            else:
+                faits.append(f"boutique : OK ({zone.size[0]}×{zone.size[1]})")
 
     for d in decoupes:
         chemin = os.path.join(RACINE, d['source'])
