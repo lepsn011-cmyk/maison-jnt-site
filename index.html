@@ -94,16 +94,21 @@
 
 :root{
   /* --- Palette. Le beige est la couleur du logo : elle est VERROUILLÉE.
-         Une seule ligne à corriger dès réception du fichier logo. --- */
-  --beige:        oklch(0.902 0.014 52);
-  --grege:        oklch(0.855 0.016 52);
-  --grege-fonce:  oklch(0.795 0.018 52);
-  --encre:        oklch(0.205 0.012 52);
-  --encre-douce:  oklch(0.392 0.011 52);
+         Valeur MESURÉE (#E8DED5) sur les pixels du carton du logo, dans la
+         capture du profil Instagram — pas estimée à l'œil comme auparavant.
+         Écart avec l'ancienne estimation : distance OKLab 0,0056, soit tout
+         juste au seuil de perception. La teinte des neutres suit la mesure (65).
+         Limite : c'est un JPEG d'une capture d'écran, pas le fichier logo.
+         À raffiner si le vrai fichier arrive — une ligne à changer. --- */
+  --beige:        oklch(0.906 0.016 65);
+  --grege:        oklch(0.858 0.018 65);
+  --grege-fonce:  oklch(0.798 0.020 65);
+  --encre:        oklch(0.205 0.012 65);
+  --encre-douce:  oklch(0.392 0.011 65);
   --accent:       oklch(0.44  0.09  40);
   --accent-vif:   oklch(0.38  0.10  40);
-  --sur-encre:    oklch(0.940 0.008 52);
-  --sur-encre-doux: oklch(0.790 0.010 52);
+  --sur-encre:    oklch(0.940 0.008 65);
+  --sur-encre-doux: oklch(0.790 0.010 65);
 
   /* --- Typographie --- */
   --display: 'Tirets', 'Bodoni Moda', 'Didot', 'Times New Roman', serif;
@@ -780,7 +785,7 @@ a{ color: inherit; }
   overflow: auto;
   overscroll-behavior: contain;
 }
-.fiche::backdrop{ background: oklch(0.205 0.012 52 / 0.55); }
+.fiche::backdrop{ background: oklch(0.205 0.012 65 / 0.55); }
 
 /* Origine calculée depuis la carte cliquée : la fiche paraît en sortir.
    (emil-design-eng : « make popovers origin-aware ») */
@@ -930,7 +935,7 @@ a{ color: inherit; }
   flex-direction: column;
   overflow: hidden;
 }
-.feuille::backdrop{ background: oklch(0.205 0.012 52 / 0.55); }
+.feuille::backdrop{ background: oklch(0.205 0.012 65 / 0.55); }
 .feuille[open]{ animation: feuille-entree 300ms var(--ease-drawer); }
 .feuille[open]::backdrop{ animation: fondu 300ms var(--ease-drawer); }
 .feuille.ferme{ animation: feuille-sortie 200ms var(--ease-drawer) forwards; }
@@ -983,9 +988,9 @@ a{ color: inherit; }
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid oklch(0.94 0.008 52 / 0.22);
+  border-top: 1px solid oklch(0.94 0.008 65 / 0.22);
 }
-.editorial__item{ border-bottom: 1px solid oklch(0.94 0.008 52 / 0.22); }
+.editorial__item{ border-bottom: 1px solid oklch(0.94 0.008 65 / 0.22); }
 .editorial__bouton{
   display: flex;
   align-items: baseline;
@@ -1119,7 +1124,7 @@ a{ color: inherit; }
   gap: 28px;
   justify-content: space-between;
   padding-bottom: 28px;
-  border-bottom: 1px solid oklch(0.94 0.008 52 / 0.18);
+  border-bottom: 1px solid oklch(0.94 0.008 65 / 0.18);
 }
 .pied .marque{ color: var(--sur-encre); }
 .pied .marque__script,
@@ -1149,7 +1154,7 @@ a{ color: inherit; }
 .pied__bas{
   padding-top: 24px;
   font-size: 0.8125rem;
-  color: oklch(0.66 0.010 52);
+  color: oklch(0.66 0.010 65);
 }
 
 /* ========================================================================== */

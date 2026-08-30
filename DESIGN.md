@@ -30,20 +30,36 @@ décisions qui gardent la couleur du client tout en évitant le piège :
 
 | Token | Valeur | Rôle |
 |---|---|---|
-| `--beige` | `oklch(0.902 0.014 52)` ≈ `#E9DFD8` | surface dominante — la couleur du logo |
-| `--grege` | `oklch(0.855 0.016 52)` | bandes alternées, cartes, séparations |
-| `--grege-fonce` | `oklch(0.795 0.018 52)` | filets, bordures, états au repos |
-| `--encre` | `oklch(0.205 0.012 52)` | texte principal + surface éditoriale sombre |
-| `--encre-douce` | `oklch(0.392 0.011 52)` | texte secondaire (jamais plus clair : cf. §5) |
+| `--beige` | `oklch(0.906 0.016 65)` = `#E8DED5` | surface dominante — **mesurée** sur le logo |
+| `--grege` | `oklch(0.858 0.018 65)` | bandes alternées, cartes, séparations |
+| `--grege-fonce` | `oklch(0.798 0.020 65)` | filets, bordures, états au repos |
+| `--encre` | `oklch(0.205 0.012 65)` | texte principal + surface éditoriale sombre |
+| `--encre-douce` | `oklch(0.392 0.011 65)` | texte secondaire (jamais plus clair : cf. §5) |
 | `--accent` | `oklch(0.44 0.09 40)` | **unique accent**, états interactifs |
-| `--sur-encre` | `oklch(0.94 0.008 52)` | texte sur surface sombre |
+| `--sur-encre` | `oklch(0.940 0.008 65)` | texte sur surface sombre |
 
-**L'accent est dérivé, pas inventé.** C'est la teinte du beige (≈ 40–52°) poussée en chroma et
-descendue en clarté : un bois de rose. Il vient du sous-ton rosé du logo.
+### D'où vient le beige, exactement
 
-Il n'est *pas* un or-parfum. C'est délibéré : `impeccable` avertit du réflexe de second ordre —
-« parfum qui n'est pas doré → ambre/cognac » est le piège d'un cran plus profond. L'accent sort de
-la marque, pas de la catégorie.
+`#E8DED5`, **échantillonné au pixel** sur le carton du logo dans la capture du profil
+Instagram (zones plates, à l'écart du lettrage, médiane des pixels clairs). Il remplace une
+estimation visuelle à `oklch(0.902 0.014 52)`.
+
+L'écart tient en une ligne : **distance OKLab 0,0056**, RGB (+1, +2, −1) — tout juste au
+seuil de perception. L'estimation initiale était bonne ; la mesure la remplace par principe,
+pas parce que le rendu change. La teinte des neutres suit la mesure (65 au lieu de 52).
+
+**Limite assumée** : la source est un JPEG d'une capture d'écran affichant le logo, pas le
+fichier logo. Une ligne à corriger le jour où le vrai fichier arrive.
+
+### L'accent, et une correction
+
+`--accent` est un **bois de rose choisi** dans la famille chaude (teinte 40), retenu parce
+qu'il évite le réflexe or-parfum qu'`impeccable` classe en piège de second ordre.
+
+Une version antérieure de ce document le présentait comme « la teinte du beige poussée en
+chroma ». C'était vrai tant que le beige était estimé à 52 ; la mesure le place à 65, et
+l'accent reste délibérément à 40. Il est donc voisin, pas dérivé — la formulation est
+corrigée ici plutôt que laissée à induire en erreur.
 
 **Emploi de l'accent : ≤ 5 % de la surface.** Filtre actif, soulignement de lien, anneau de focus.
 Rien d'autre. Le beige est la couleur engagée ; l'accent est retenu.
