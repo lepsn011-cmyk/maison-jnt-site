@@ -30,6 +30,7 @@ import io
 import json
 import os
 import re
+import subprocess
 import sys
 import threading
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
@@ -293,7 +294,79 @@ JS_ENCRE = r"""
 # Passe principale
 # --------------------------------------------------------------------------
 
+def controler_assets():
+    """Contrôles sur fichiers, avant même d'ouvrir un navigateur.
+
+    Un chemin de photo mort ne lève aucune erreur JS : il produit simplement un
+    carré vide en production. C'est donc ici qu'on l'attrape, pas au rendu.
+    """
+    print(f'{GRIS}── assets {"─" * 54}{RAZ}')
+
+    # On ÉVALUE catalogue.js au lieu de le passer au regex : une première
+    # version regexait la source et attrapait l'exemple `<slug>.jpg` écrit dans
+    # le commentaire d'en-tête. Lire la donnée réelle supprime la classe entière
+    # de ces faux positifs.
+    extrait = subprocess.run(
+        ['node', '-e',
+         'global.window = global;'
+         f'require({json.dumps(os.path.join(RACINE, "catalogue.js"))});'
+         'console.log(JSON.stringify({'
+         '  produits: (window.CATALOGUE||[]).map(p => [p.slug, p.photo]),'
+         '  boutique: (window.BOUTIQUE||{}).photo || null'
+         '}));'],
+        capture_output=True, text=True, cwd=RACINE)
+    if extrait.returncode != 0:
+        note('lecture de catalogue.js', False, extrait.stderr.strip()[:120])
+        return
+    data = json.loads(extrait.stdout)
+
+    declarees = [(s, c) for s, c in data['produits'] if c]
+    manquantes = [(s, c) for s, c in declarees if not os.path.isfile(os.path.join(RACINE, c))]
+    if not declarees:
+        note('photos produit', True,
+             f'aucune déclarée sur {len(data["produits"])} références — '
+             'la zone photo reste masquée, la grille est purement typographique')
+    else:
+        note('photos produit sur le disque', not manquantes,
+             f'{len(declarees) - len(manquantes)}/{len(declarees)} trouvées'
+             + (f' — MANQUE {[m[0] for m in manquantes][:3]}' if manquantes else ''))
+
+    # La photo de boutique est annoncée avant d'exister : c'est voulu (le site
+    # affiche un emplacement nommé). Signalé, mais toléré tant qu'elle manque.
+    bp = data['boutique']
+    if bp:
+        existe = os.path.isfile(os.path.join(RACINE, bp))
+        note('photo de boutique', existe,
+             bp if existe else f'{bp} pas encore fournie — placeholder nommé affiché',
+             tolere=not existe)
+
+    # Format RÉEL, jamais l'extension : un .jpg peut être un PNG renommé
+    # (déjà rencontré : 12,3 Mo pour 5 images).
+    mauvais, total = [], 0
+    dossier = os.path.join(RACINE, 'assets')
+    for base, _, fichiers in os.walk(dossier):
+        for f in fichiers:
+            chemin = os.path.join(base, f)
+            total += os.path.getsize(chemin)
+            if not f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                continue
+            try:
+                with Image.open(chemin) as im:
+                    reel = (im.format or '').upper()
+                attendu = 'JPEG' if f.lower().endswith(('.jpg', '.jpeg')) else \
+                          'PNG' if f.lower().endswith('.png') else 'WEBP'
+                if reel != attendu:
+                    mauvais.append(f'{f} est un {reel}')
+            except Exception as e:
+                mauvais.append(f'{f} illisible ({e})')
+    note('format réel des images', not mauvais,
+         'conforme à l\'extension' if not mauvais else f'INCOHÉRENT : {mauvais[:3]}')
+    note('poids de assets/', total < 2 * 1024 * 1024, f'{total / 1024:.0f} Ko (plafond 2 Mo)')
+    print()
+
+
 def auditer(rapide=False):
+    controler_assets()
     srv, port = demarrer_serveur()
     base = f'http://127.0.0.1:{port}/index.html'
     print(f'{GRIS}Serveur éphémère sur {base}{RAZ}\n')

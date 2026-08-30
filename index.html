@@ -641,6 +641,56 @@ a{ color: inherit; }
 .entree:hover{ background: var(--grege); }
 .entree:focus-visible{ outline-offset: -2px; }
 
+/* --- Zone photo. Ratio réservé par aspect-ratio : la place est prise avant
+       même que l'image charge, donc aucun décalage (CLS) à l'arrivée. --- */
+.entree__media,
+.fiche__media{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--grege-fonce);
+  border-radius: 2px;
+  background: var(--grege);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.entree__media{ margin-bottom: 14px; }
+.fiche__media{ aspect-ratio: 4 / 3; max-height: 300px; margin-bottom: 22px; }
+
+.entree__media img,
+.fiche__media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Emplacement en attente : soigné, et lisiblement TEMPORAIRE. Pas de faux
+   flacon dessiné, pas d'illustration SVG (interdits impeccable) — un panneau
+   tonal et un mot, rien de plus. */
+.attente{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  text-align: center;
+  color: var(--encre-douce);
+}
+.attente__trait{
+  width: 26px;
+  height: 1px;
+  border-bottom: 1px dashed var(--encre-douce);
+}
+.attente__mot{
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
 .entree__marque{
   font-size: 0.625rem;
   font-weight: 500;
@@ -1018,7 +1068,15 @@ a{ color: inherit; }
 }
 .infos__cle{ margin: 0; }
 .infos__valeur{ margin: 0; font-size: 0.9375rem; }
-.infos__valeur a{ text-underline-offset: 3px; }
+.infos__valeur a{
+  /* Ces liens n'existaient pas tant que les valeurs étaient « à confirmer ».
+     Dès qu'ils portent un vrai tel: / Instagram, ils doivent respecter la
+     cible tactile minimale — mesuré, pas supposé. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-underline-offset: 3px;
+}
 .infos__valeur a:hover{ color: var(--accent); }
 
 /* Champ non fourni par le client : affiché comme tel, jamais inventé.
@@ -1284,7 +1342,7 @@ a{ color: inherit; }
     </div>
     <button class="fiche__fermer" type="button" id="fiche-fermer" aria-label="Fermer la fiche">×</button>
   </div>
-  <div class="fiche__corps">
+  <div class="fiche__corps" id="fiche-corps">
     <ul class="fiche__attributs" id="fiche-attributs"></ul>
     <p class="fiche__description" id="fiche-description"></p>
 
@@ -1360,12 +1418,19 @@ a{ color: inherit; }
          projet n'est pas sur ce disque, seul le pattern est repris).
          Ne renvoie JAMAIS null/undefined/« 0 € » : soit un prix, soit un
          appel au contact. Un seul point de vérité pour tout le site. --- */
-  var EURO = new Intl.NumberFormat('fr-FR', {
-    style: 'currency', currency: 'EUR', maximumFractionDigits: 0
-  });
+  /* Un prix ne s'arrondit JAMAIS : 34,90 € affiché « 35 € » est un montant
+     faux publié. Les centimes n'apparaissent que s'il y en a — un prix rond
+     reste « 35 € » et non « 35,00 € ». */
+  function euro(v){
+    var dec = Number.isInteger(v) ? 0 : 2;
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: dec, maximumFractionDigits: dec
+    }).format(v);
+  }
   function prixOuContact(p){
     if(typeof p.prix === 'number' && isFinite(p.prix) && p.prix > 0){
-      return { type: 'prix', texte: EURO.format(p.prix) };
+      return { type: 'prix', texte: euro(p.prix) };
     }
     return { type: 'contact', texte: 'Prix en boutique' };
   }
@@ -1536,6 +1601,31 @@ a{ color: inherit; }
   var compteur = document.getElementById('compteur');
   var premierRendu = true;
 
+  /* La zone photo n'apparaît QUE si au moins une référence en a une.
+     Tant que le client n'a fourni aucune image, afficher 24 carrés vides
+     dégraderait la grille : elle reste alors purement typographique, dense,
+     telle qu'elle a été validée. Le premier fichier déposé la fait apparaître
+     partout, sans toucher au code. */
+  var A_DES_PHOTOS = CATALOGUE.some(function(p){ return !!p.photo; });
+
+  function media(p, classe){
+    var boite = el('div', classe);
+    if(p.photo){
+      var img = document.createElement('img');
+      img.src = p.photo;
+      img.alt = 'Flacon de ' + p.nom + ', ' + p.marque;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      boite.appendChild(img);
+    } else {
+      var a = el('div','attente');
+      a.appendChild(el('span','attente__trait'));
+      a.appendChild(el('span','attente__mot','Photo à venir'));
+      boite.appendChild(a);
+    }
+    return boite;
+  }
+
   function carte(p, i){
     var li = el('li','grille__case');
     var b  = el('button','entree');
@@ -1543,6 +1633,8 @@ a{ color: inherit; }
     b.style.setProperty('--i', String(Math.min(i, 11)));
     b.setAttribute('data-slug', p.slug);
     b.setAttribute('aria-haspopup','dialog');
+
+    if(A_DES_PHOTOS) b.appendChild(media(p, 'entree__media'));
 
     b.appendChild(el('span','entree__marque', p.marque));
     b.appendChild(el('span','entree__nom', p.nom));
@@ -1637,13 +1729,23 @@ a{ color: inherit; }
     document.getElementById('fiche-marque').textContent = p.marque;
     document.getElementById('fiche-nom').textContent = p.nom;
 
+    var corps = document.getElementById('fiche-corps');
+    var ancienMedia = corps.querySelector('.fiche__media');
+    if(ancienMedia) ancienMedia.remove();
+    /* Contrairement à la grille, la fiche n'affiche PAS de placeholder : un
+       panneau « photo à venir » pleine largeur y repoussait la pyramide
+       olfactive — la pièce maîtresse — sous la ligne de flottaison. La grille
+       suffit à signaler l'attente. */
+    if(p.photo) corps.insertBefore(media(p, 'fiche__media'), corps.firstChild);
+
     var attrs = document.getElementById('fiche-attributs');
     attrs.textContent = '';
+    /* Une année inconnue ne produit pas une puce « null » : elle est omise. */
     [LIB_FAMILLE[p.famille] || p.famille,
      LIB_GENRE[p.genre] || p.genre,
      p.concentration,
-     String(p.annee)].forEach(function(t){
-      attrs.appendChild(el('li','fiche__attribut', t));
+     p.annee ? String(p.annee) : null].forEach(function(t){
+      if(t) attrs.appendChild(el('li','fiche__attribut', t));
     });
 
     document.getElementById('fiche-description').textContent = p.description;
@@ -1850,6 +1952,19 @@ a{ color: inherit; }
     hote.appendChild(ligneInfo('Instagram', valeurOuAConfirmer(
       BOUTIQUE.instagram ? '@' + String(BOUTIQUE.instagram).replace(/^@/,'') : null,
       BOUTIQUE.instagram ? 'https://instagram.com/' + String(BOUTIQUE.instagram).replace(/^@/,'') : null)));
+
+    /* Avis Google : une ligne du même tableau, dans le registre du site.
+       Ni widget étoilé ni pastille — le client a refusé les badges de
+       réassurance. Formulation factuelle : avec 6 avis, l'échantillon est
+       petit et la note ne doit pas être surjouée. Absent si `google` est nul. */
+    if(BOUTIQUE.google && typeof BOUTIQUE.google.note === 'number'){
+      var g = BOUTIQUE.google;
+      var texte = g.note.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) + ' sur 5';
+      if(typeof g.avis === 'number'){
+        texte += ' · ' + g.avis + ' avis';
+      }
+      hote.appendChild(ligneInfo('Avis Google', document.createTextNode(texte)));
+    }
 
     /* Pied de page : mêmes valeurs, même règle. */
     var liens = document.getElementById('pied-liens');

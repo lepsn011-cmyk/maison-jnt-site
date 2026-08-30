@@ -24,6 +24,11 @@
    index.html : `null` affiche un appel au contact, jamais « 0 € » ni « null ».
    Ne PAS remplir au jugé — un montant faux publié se remarque.
 
+   PHOTO : `photo: 'assets/parfums/<slug>.jpg'` ou `null`.
+   `null` affiche un emplacement soigné « photo à venir » — jamais un carré vide.
+   Les fichiers sont produits par `outils/decoupe.py` à partir des flat-lays du
+   client, jamais dessinés ni fabriqués.
+
    FAMILLES : florale | boisee | ambree | hesperidee | fougere | chypree
    GENRES   : homme | femme | mixte
    CONCENTR.: EDT | EDP | Extrait
@@ -43,6 +48,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Cannelle', 'Muscade', 'Bergamote'],
       coeur: ['Datte', 'Praline', 'Tubéreuse', 'Mahonial'],
@@ -62,6 +68,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Orchidée', 'Héliotrope', 'Mandarine'],
       coeur: ['Accord gourmand', 'Fruits tropicaux'],
@@ -81,6 +88,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Poivre noir', 'Tabac', 'Ananas'],
       coeur: ['Patchouli', 'Café', 'Iris'],
@@ -100,6 +108,7 @@ window.CATALOGUE = [
     nouveaute: true,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Gingembre', 'Bergamote', 'Armoise'],
       coeur: ['Patchouli', 'Sapin baumier', 'Encens'],
@@ -119,6 +128,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Fruits', 'Lys', 'Grenade', 'Aldéhydes'],
       coeur: ['Tubéreuse', 'Jasmin', 'Gardénia', 'Ylang-ylang', 'Rose', 'Chèvrefeuille', 'Pivoine'],
@@ -140,6 +150,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Oud', 'Encens'],
       coeur: ['Rose', 'Safran', 'Framboise', 'Bouleau'],
@@ -159,6 +170,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Bergamote'],
       coeur: ['Lavande', 'Poivre de Sichuan', 'Anis étoilé', 'Muscade'],
@@ -178,6 +190,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Pamplemousse', 'Bergamote', 'Gingembre'],
       coeur: ['Magnolia', 'Jasmin', 'Iris'],
@@ -197,6 +210,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Rose', 'Bergamote'],
       coeur: ['Patchouli', 'Cèdre'],
@@ -218,6 +232,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Citron', 'Ananas', 'Bergamote', 'Cassis', 'Pomme'],
       coeur: ['Bouleau', 'Jasmin', 'Rose'],
@@ -237,6 +252,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Bergamote', 'Pamplemousse', 'Pêche', 'Orange'],
       coeur: ['Géranium', 'Jasmin', 'Litchi', 'Rose'],
@@ -256,6 +272,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Iris', 'Citron', 'Verveine'],
       coeur: ['Lavande', 'Violette', 'Notes épicées'],
@@ -277,6 +294,7 @@ window.CATALOGUE = [
     nouveaute: true,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Rhubarbe', 'Miel', 'Bergamote', 'Orange'],
       coeur: ['Notes solaires', 'Framboise', 'Cèdre'],
@@ -296,6 +314,7 @@ window.CATALOGUE = [
     nouveaute: true,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Ananas', 'Jacinthe'],
       coeur: ['Poivre rose', 'Jasmin', 'Iris'],
@@ -317,6 +336,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Pomme', 'Bergamote', 'Citron', 'Cannelle'],
       coeur: ['Fleur d\'oranger', 'Cardamome', 'Prune', 'Notes aquatiques'],
@@ -338,6 +358,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Pomme', 'Cannelle', 'Lavande sauvage', 'Bergamote'],
       coeur: ['Fleur d\'oranger', 'Muguet'],
@@ -359,6 +380,7 @@ window.CATALOGUE = [
     nouveaute: true,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Amande amère', 'Safran'],
       coeur: ['Cèdre', 'Jasmin'],
@@ -380,6 +402,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Notes vertes', 'Bergamote'],
       coeur: ['Notes sucrées', 'Melon', 'Ananas', 'Cèdre', 'Ambre'],
@@ -401,6 +424,7 @@ window.CATALOGUE = [
     nouveaute: true,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Poivre rose', 'Coriandre', 'Mandarine', 'Violette'],
       coeur: ['Patchouli', 'Cèdre', 'Mousse de chêne'],
@@ -422,6 +446,7 @@ window.CATALOGUE = [
     nouveaute: false,
     editionLimitee: false,
     prix: null,
+    photo: null,        // rempli par outils/decoupe.py
     notes: {
       tete: ['Agrumes', 'Bergamote'],
       coeur: ['Musc blanc', 'Aloe vera'],
@@ -429,6 +454,109 @@ window.CATALOGUE = [
     },
     description: "Floral clair et musqué : agrumes et aloe en ouverture, jasmin et une touche d'oud en fond. Léger pour un parfum oriental, taillé pour la journée.",
     source: 'https://www.fragrantica.com/perfume/Asdaaf/Ameerat-Al-Arab-81376.html'
+  },
+
+  /* ==========================================================================
+     RÉFÉRENCES IDENTIFIÉES SUR LES PHOTOS DE STOCK DU CLIENT
+     --------------------------------------------------------------------------
+     Relevées à l'œil sur ses deux flat-lays, puis vérifiées une par une. Ce
+     sont des flacons qu'il a RÉELLEMENT en rayon — ce sont donc elles qui
+     pourront porter une vraie photo recadrée depuis ses images.
+
+     ATTENTION AUX DÉCLINAISONS. Deux pièges rencontrés ici, du même type :
+       - « Asad » et « Asad Bourbon » sont DEUX parfums distincts, aux pyramides
+         sans rapport (poivre/tabac/café contre lavande/cacao/vanille bourbon).
+         Ils coexistent volontairement ci-dessous. Ne pas fusionner.
+       - La ligne « Kenzie » de Volaré compte plusieurs déclinaisons (Oud Blend,
+         Irish Vanilla, Our Blend, Summer Bottled, Classic Pistachio). Seule
+         « Summer Bottled » est sur la photo ; c'est la seule retenue.
+     ========================================================================== */
+
+  {
+    slug: 'lattafa-asad-bourbon',
+    nom: 'Asad Bourbon',
+    marque: 'Lattafa',
+    annee: 2025,
+    genre: 'homme',
+    concentration: 'EDP',
+    famille: 'ambree',
+    nouveaute: true,
+    editionLimitee: false,
+    prix: null,
+    photo: null,        // rempli par outils/decoupe.py
+    notes: {
+      tete: ['Lavande', 'Mirabelle', 'Poivre rose'],
+      coeur: ['Cacao', 'Muscade', 'Davana'],
+      fond: ['Vanille bourbon', 'Ambre', 'Vétiver']
+    },
+    description: "Le cacao et la vanille bourbon dominent, adossés à un vétiver sec qui empêche l'ensemble de tourner au dessert. À ne pas confondre avec Asad, dont il ne partage aucune note.",
+    source: 'https://www.fragrantica.com/perfume/Lattafa-Perfumes/Asad-Bourbon-101124.html'
+  },
+
+  /* ---------------------------------------------------------- FRENCH AVENUE */
+  {
+    slug: 'french-avenue-liquid-brun',
+    nom: 'Liquid Brun',
+    marque: 'French Avenue',
+    annee: 2024,
+    genre: 'homme',
+    concentration: 'EDP',
+    famille: 'boisee',
+    nouveaute: true,
+    editionLimitee: false,
+    prix: null,
+    photo: null,        // rempli par outils/decoupe.py
+    notes: {
+      tete: ['Cannelle', 'Fleur d\'oranger', 'Cardamome', 'Bergamote'],
+      coeur: ['Vanille bourbon', 'Élémi'],
+      fond: ['Praline', 'Ambroxan', 'Musc', 'Bois de gaïac']
+    },
+    description: "Une ouverture épicée-hespéridée qui tombe vite sur la praline et la vanille, tenue par un bois de gaïac fumé. L'un des flacons les plus demandés du segment.",
+    source: 'https://www.fragrantica.com/perfume/French-Avenue/Liquid-Brun-94713.html'
+  },
+
+  /* ----------------------------------------------------------------- VOLARÉ */
+  {
+    slug: 'volare-kenzie-summer-bottled',
+    nom: 'Kenzie Summer Bottled',
+    marque: 'Volaré',
+    annee: 2025,
+    genre: 'femme',
+    concentration: 'EDP',
+    famille: 'florale',
+    nouveaute: true,
+    editionLimitee: false,
+    prix: null,
+    photo: null,        // rempli par outils/decoupe.py
+    notes: {
+      tete: ['Romarin', 'Citron'],
+      coeur: ['Banane', 'Ylang-ylang', 'Plumeria'],
+      fond: ['Lait de coco', 'Santal']
+    },
+    description: "Solaire et lacté : la banane et le plumeria sur un fond de coco et de santal, ouverts par un romarin citronné qui évite le monoï pur. Un floral d'été franchement estival.",
+    source: 'https://www.fragrantica.com/perfume/Volare/Kenzie-Summer-Bottled-132226.html'
+  },
+
+  /* -------------------------------------------------------- FRAGRANCE WORLD */
+  {
+    slug: 'fragrance-world-proud-of-you-amber',
+    nom: 'Proud of You Amber',
+    marque: 'Fragrance World',
+    annee: 2024,
+    genre: 'mixte',
+    concentration: 'EDP',
+    famille: 'ambree',
+    nouveaute: true,
+    editionLimitee: false,
+    prix: null,
+    photo: null,        // rempli par outils/decoupe.py
+    notes: {
+      tete: ['Lavande'],
+      coeur: ['Ambre'],
+      fond: ['Vanille']
+    },
+    description: "Composition volontairement courte : lavande, ambre, vanille. Poudré, linéaire, très lisible — c'est ce qui en fait un bon premier ambré.",
+    source: 'https://www.fragrantica.com/perfume/Fragrance-World/Proud-of-You-Amber-119808.html'
   }
 ];
 
@@ -445,16 +573,15 @@ window.MAISON_DU_MOIS = {
 };
 
 /* ============================================================================
-   LA BOUTIQUE
+   LA BOUTIQUE — informations réelles, fournies par le client
    ----------------------------------------------------------------------------
-   Les champs à `null` sont AFFICHÉS COMME « à confirmer » par le site — ils ne
-   disparaissent pas et ne sont pas remplis au jugé. Renseigner une valeur la
-   fait apparaître immédiatement, sans autre modification.
+   HORAIRES : ceux de la fiche Google, et eux seuls. La bio Instagram annonce
+   une version simplifiée (« lundi - Samedi / 12h00 à 20h00 ») qui contredit le
+   vendredi et le dimanche. Arbitrage tranché par le client : Google fait foi.
+   Ne pas « harmoniser » les deux sources.
 
-   Ces informations n'ont pas été inventées faute de source fiable : la bio
-   Instagram transmise était tronquée sur la capture (adresse, horaires et
-   pseudo coupés). Publier une fausse adresse pour un commerce réel serait une
-   erreur bien plus coûteuse qu'un champ vide.
+   Le mécanisme « à confirmer » reste en place pour tout champ laissé à `null` —
+   il n'a simplement plus rien à signaler ici.
    ========================================================================== */
 window.BOUTIQUE = {
   nom: 'Maison JNT',
@@ -462,12 +589,24 @@ window.BOUTIQUE = {
   accroche: "Une centaine de références en rayon, et la seule façon de choisir un parfum : le sentir.",
   invitation: "Passez quand vous voulez. On vous fait sentir, on vous explique, et vous repartez avec ce qui vous va — pas avec ce qu'on veut vendre.",
 
-  adresse: null,        // à confirmer avec le client
-  codePostal: null,     // à confirmer
-  ville: null,          // à confirmer
-  telephone: null,      // à confirmer
-  instagram: null,      // pseudo tronqué sur la capture — à confirmer
-  horaires: null,       // à confirmer (ex. [{ jours: 'Lundi – Samedi', heures: '10h – 19h30' }])
+  adresse: '154 bis rue Ordener',
+  codePostal: '75018',
+  ville: 'Paris',
+  telephone: '07 49 14 85 50',
+  instagram: 'maison_jnt',
 
-  photo: 'assets/boutique-interieur.jpg'  // fichier non fourni → placeholder nommé
+  horaires: [
+    { jours: 'Lundi – jeudi', heures: '12h – 20h' },
+    { jours: 'Vendredi',      heures: '14h – 21h' },
+    { jours: 'Samedi',        heures: '12h – 20h' },
+    { jours: 'Dimanche',      heures: 'Fermé'     }
+  ],
+
+  /* Avis Google. Affiché en une ligne typographique dans la section boutique —
+     jamais en badge étoilé ni en bandeau de réassurance, que le client a
+     explicitement refusés. Avec 6 avis l'échantillon est petit : la formulation
+     reste factuelle et ne surjoue pas. Mettre `null` retire la ligne. */
+  google: { note: 5.0, avis: 6 },
+
+  photo: 'assets/boutique-interieur.jpg'  // fichier non encore fourni → placeholder nommé
 };
