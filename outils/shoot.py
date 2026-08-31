@@ -53,6 +53,34 @@ def main():
         # On n'attend pas « au jugé » : on attend que les polices soient prêtes,
         # sinon la capture fige un rendu en police de repli.
         page.evaluate('() => document.fonts.ready')
+
+        # Les images du catalogue sont en loading="lazy" : elles ne commencent à
+        # charger qu'en entrant dans la zone visible. `networkidle` est donc atteint
+        # AVANT elles, et une capture de section les fige en emplacement gris — ce
+        # qui a fait passer quatre décors bien présents pour des trous. On force
+        # donc le défilement, puis on attend le décodage RÉEL de chaque image.
+        # Faire défiler pour « réveiller » le lazy-load est une heuristique qui
+        # rate : la photo de boutique, créée en JS, ne démarrait toujours pas.
+        # On bascule donc TOUTES les images en chargement immédiat et on relance
+        # la requête pour celles qui n'ont rien commencé (currentSrc vide).
+        page.evaluate('''() => {
+            document.querySelectorAll('img').forEach(i => {
+                i.loading = 'eager';
+                if (!i.currentSrc && i.getAttribute('src')) {
+                    const s = i.getAttribute('src');
+                    i.setAttribute('src', '');
+                    i.setAttribute('src', s);
+                }
+            });
+        }''')
+        page.wait_for_function(
+            '''() => Array.from(document.images)
+                 .every(i => i.complete && i.naturalWidth > 0)''',
+            timeout=20000)
+        # `complete` dit « octets reçus », pas « pixels décodés » : decode() attend
+        # le bitmap réellement prêt à peindre.
+        page.evaluate('() => Promise.all(Array.from(document.images).map('
+                      'i => i.decode().catch(() => null)))')
         page.wait_for_timeout(a.settle)
 
         if a.click:
@@ -67,7 +95,9 @@ def main():
 
         polices = page.evaluate(
             '() => Array.from(document.fonts).filter(f=>f.status==="loaded").map(f=>f.family)')
-        print(f'{a.out}  {a.width}px  polices={sorted(set(polices))}')
+        n_img = page.evaluate('() => Array.from(document.images).filter(i => i.complete && i.naturalWidth > 0).length')
+        n_tot = page.evaluate('() => document.images.length')
+        print(f'{a.out}  {a.width}px  polices={sorted(set(polices))}  images={n_img}/{n_tot} peintes')
         nav.close()
     srv.shutdown()
 

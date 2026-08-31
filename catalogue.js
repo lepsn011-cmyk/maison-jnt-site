@@ -579,7 +579,14 @@ window.CATALOGUE = [
    comme étant le stock du client, devant des gens qui se déplacent ensuite
    en boutique.
    ========================================================================== */
-window.DECORS = {};
+window.DECORS = {
+  ambree:     'assets/decors/ambree.jpg',
+  boisee:     'assets/decors/boisee.jpg',
+  chypree:    'assets/decors/chypree.jpg',
+  florale:    'assets/decors/florale.jpg',
+  fougere:    'assets/decors/fougere.jpg',
+  hesperidee: 'assets/decors/hesperidee.jpg'
+};
 
 /* ============================================================================
    LA MAISON DU MOIS — section éditoriale
