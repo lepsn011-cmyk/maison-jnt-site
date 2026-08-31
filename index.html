@@ -610,13 +610,17 @@ a{ color: inherit; }
 .grille{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--grege-fonce);
-  border-block: 1px solid var(--grege-fonce);
+  /* Cartes détachées sur le fond beige, à la manière des vignettes produit de
+     référence : le filet d'1px qui les soudait en tableau est remplacé par une
+     gouttière. La carte devient un objet, plus une cellule. */
+  gap: 14px;
+  background: transparent;
+  border: 0;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 2px;
 }
+@media (min-width: 640px){ .grille{ gap: 18px; } }
 @media (min-width: 640px){ .grille{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
 @media (min-width: 1180px){ .grille{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
 
@@ -627,24 +631,43 @@ a{ color: inherit; }
 .entree{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: stretch;
+  gap: 0;
   width: 100%;
-  min-height: 168px;
-  padding: 18px 16px 16px;
+  /* Padding NUL : l'image est à fond perdu en haut de la carte, comme dans la
+     référence. Le texte reçoit son propre retrait via .entree__corps. */
+  padding: 0;
   border: 0;
-  background: var(--beige);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--sur-encre);
+  box-shadow: 0 1px 2px rgba(40,32,26,0.05), 0 6px 16px -8px rgba(40,32,26,0.16);
   text-align: left;
   font-family: var(--corps);
   color: inherit;
   cursor: pointer;
-  transition: background var(--t-micro) var(--ease-out);
+  transition: box-shadow var(--t-micro) var(--ease-out),
+              transform var(--t-micro) var(--ease-out);
   /* Visible par défaut : l'animation d'entrée enrichit un état déjà peint,
      elle ne le produit pas. (impeccable) */
   opacity: 1;
 }
-.entree:hover{ background: var(--grege); }
-.entree:focus-visible{ outline-offset: -2px; }
+.entree:hover{
+  box-shadow: 0 2px 4px rgba(40,32,26,0.07), 0 14px 28px -10px rgba(40,32,26,0.24);
+  transform: translateY(-2px);
+}
+.entree:focus-visible{ outline-offset: 2px; }
+
+/* Le retrait du texte, séparé de l'image à fond perdu. */
+.entree__corps{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  flex: 1;
+  padding: 14px 14px 15px;
+}
+@media (min-width: 640px){ .entree__corps{ padding: 16px 16px 17px; } }
 
 /* --- Zone photo. Ratio réservé par aspect-ratio : la place est prise avant
        même que l'image charge, donc aucun décalage (CLS) à l'arrivée. --- */
@@ -661,9 +684,11 @@ a{ color: inherit; }
   justify-content: center;
 }
 /* position:relative EXPLICITE avec z-index : conteneur de la mention
-   « visuel provisoire ». (CLAUDE.md §4.6 — un relative sans z-index ne
-   contient pas ses enfants positionnés de façon fiable.) */
-.entree__media{ margin-bottom: 14px; position: relative; z-index: 0; }
+   « visuel provisoire » et de la pastille d'état. (CLAUDE.md §4.6 — un
+   relative sans z-index ne contient pas ses enfants positionnés de façon
+   fiable.) */
+.entree__media{ margin-bottom: 0; position: relative; z-index: 0;
+  border: 0; border-radius: 0; }
 .fiche__media{ aspect-ratio: 1 / 1; max-height: 300px; margin-bottom: 22px;
   position: relative; z-index: 1; }
 
@@ -736,12 +761,17 @@ a{ color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  flex-wrap: wrap;          /* en colonne étroite, la pastille passe au-dessus */
+  gap: 6px 10px;
   width: 100%;
-  padding-top: 10px;
-  border-top: 1px solid var(--grege-fonce);
+  min-width: 0;
+  margin-top: auto;
+  padding-top: 11px;
+  border-top: 1px solid var(--grege);
 }
+.entree__pied > *{ min-width: 0; }   /* sans ça un enfant flex refuse de rétrécir */
 .entree__conc{
+  flex: 0 0 auto;
   font-size: 0.625rem;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -751,19 +781,66 @@ a{ color: inherit; }
   border-radius: 2px;
   padding: 3px 6px;
 }
-.entree__prix{
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--encre);
-}
-.entree__prix--contact{ color: var(--accent); }
 
-.entree__drapeau{
-  font-size: 0.625rem;
-  font-weight: 500;
+
+/* Pastille en HAUT À GAUCHE de l'image — la position qu'occupe la remise dans
+   la référence. Le contenu, lui, est une information vraie : la nouveauté ou
+   l'édition limitée déjà portées par la donnée. Aucun pourcentage de remise
+   n'est affiché : il n'existe aucun prix dans ce catalogue, donc aucune remise
+   ne peut être calculée — l'inventer publierait un chiffre commercial faux. */
+.entree__badge{
+  position: absolute;
+  top: 10px; left: 10px;
+  z-index: 2;
+  background: var(--accent);
+  color: #FFF6F1;
+  font-size: 0.5625rem;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  padding: 5px 9px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Prix : entier appuyé, centimes plus petits et surélevés, symbole discret.
+   La hiérarchie de la référence, dans l'ordre typographique français
+   (montant puis €), qui est la forme correcte ici. */
+.entree__prix{
+  font-family: var(--display);
+  font-size: 1.125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--encre);
+  line-height: 1;
+  white-space: nowrap;
+}
+.prix__cts{
+  font-size: 0.625em;
+  vertical-align: 0.42em;
+  letter-spacing: 0.02em;
+  margin-left: 0.5px;
+}
+.prix__sym{
+  font-size: 0.66em;
+  color: var(--encre-douce);
+}
+
+/* Pas de prix connu : on le dit, en petit, sans imiter la graisse d'un montant
+   qui n'existe pas.
+   DEUX classes dans le sélecteur (spécificité 0,2,0) et déclaration APRÈS
+   .entree__prix : à spécificité égale et déclarée avant, cette règle perdait,
+   « Prix en boutique » s'affichait en serif 18px et faisait déborder le pied
+   de 57px à 375px. Ne pas la remonter dans le fichier. */
+.entree__prix.entree__prix--contact{
+  font-family: var(--corps);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
   color: var(--accent);
+  white-space: normal;   /* le libellé long doit pouvoir se replier */
+  text-align: right;
 }
 
 /* Stagger : PREMIER rendu seulement. Filtrer est un geste répété — il est
@@ -1467,6 +1544,43 @@ a{ color: inherit; }
     return { type: 'contact', texte: 'Prix en boutique' };
   }
 
+  /* Rend le prix avec entier appuyé / centimes surélevés, à partir des PARTIES
+     fournies par Intl — jamais d'un découpage à la virgule fait à la main, qui
+     casserait sur une autre locale ou un autre format. Aucune référence ne
+     porte de prix aujourd'hui ; ce composant est prêt pour le jour où le
+     client en saisira, et n'invente rien en attendant. */
+  function prixElement(p){
+    var pr = prixOuContact(p);
+    if(pr.type !== 'prix'){
+      return el('span','entree__prix entree__prix--contact', pr.texte);
+    }
+    var hote = el('span','entree__prix');
+    var parts = new Intl.NumberFormat('fr-FR', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: Number.isInteger(p.prix) ? 0 : 2,
+      maximumFractionDigits: Number.isInteger(p.prix) ? 0 : 2
+    }).formatToParts(p.prix);
+
+    /* On recompose dans un ordre explicite : entier, centimes, espace
+       insécable étroite, symbole. Reconstruire dans l'ordre brut de `parts`
+       plaçait l'espace AVANT les centimes. L'espace est un vrai caractère
+       (U+202F) et non une marge CSS : sinon le texte copié et le lecteur
+       d'écran rendent « 34,90€ », incorrect en français. */
+    var entier = '', cts = '', sym = '';
+    parts.forEach(function(part){
+      if(part.type === 'integer' || part.type === 'group'){ entier += part.value; }
+      else if(part.type === 'decimal' || part.type === 'fraction'){ cts += part.value; }
+      else if(part.type === 'currency'){ sym = part.value; }
+    });
+    hote.appendChild(document.createTextNode(entier));
+    if(cts) hote.appendChild(el('span','prix__cts', cts));
+    if(sym){
+      hote.appendChild(document.createTextNode('\u202F'));
+      hote.appendChild(el('span','prix__sym', sym));
+    }
+    return hote;
+  }
+
   /* ----------------------------------------------------------- l'état --- */
 
   var GROUPES = [
@@ -1709,22 +1823,33 @@ a{ color: inherit; }
     b.setAttribute('data-slug', p.slug);
     b.setAttribute('aria-haspopup','dialog');
 
-    if(A_DES_PHOTOS) b.appendChild(media(p, 'entree__media'));
+    if(A_DES_PHOTOS){
+      var zone = media(p, 'entree__media');
+      /* La pastille vit DANS l'image, en haut à gauche — la place de la remise
+         dans la référence, occupée ici par une information vraie. */
+      var etiq = p.editionLimitee ? 'Édition limitée' : (p.nouveaute ? 'Nouveauté' : null);
+      if(etiq) zone.appendChild(el('span','entree__badge', etiq));
+      b.appendChild(zone);
+    }
 
-    b.appendChild(el('span','entree__marque', p.marque));
-    b.appendChild(el('span','entree__nom', p.nom));
+    var corps = el('div','entree__corps');
+    corps.appendChild(el('span','entree__marque', p.marque));
+    corps.appendChild(el('span','entree__nom', p.nom));
 
-    if(p.nouveaute) b.appendChild(el('span','entree__drapeau','Nouveauté'));
-    if(p.editionLimitee) b.appendChild(el('span','entree__drapeau','Édition limitée'));
+    /* Sans image, la pastille n'a pas de support : elle redevient une ligne. */
+    if(!A_DES_PHOTOS){
+      if(p.nouveaute) corps.appendChild(el('span','entree__drapeau','Nouveauté'));
+      if(p.editionLimitee) corps.appendChild(el('span','entree__drapeau','Édition limitée'));
+    }
 
-    b.appendChild(el('span','entree__meta',
+    corps.appendChild(el('span','entree__meta',
       (LIB_FAMILLE[p.famille] || p.famille) + ' · ' + (LIB_GENRE[p.genre] || p.genre)));
 
     var pied = el('div','entree__pied');
     pied.appendChild(el('span','entree__conc', p.concentration));
-    var pr = prixOuContact(p);
-    pied.appendChild(el('span','entree__prix' + (pr.type === 'contact' ? ' entree__prix--contact' : ''), pr.texte));
-    b.appendChild(pied);
+    pied.appendChild(prixElement(p));
+    corps.appendChild(pied);
+    b.appendChild(corps);
 
     b.addEventListener('click', function(){ ouvrirFiche(p, b); });
     li.appendChild(b);
