@@ -1413,6 +1413,7 @@ a{ color: inherit; }
   var MDM       = window.MAISON_DU_MOIS || null;
   var DECORS    = window.DECORS || {};
   var PRODUITS  = window.PRODUITS || {};
+  var MENTION_PROVISOIRE = false;   // voir media() — remettre à true après le 31/08
 
   /* --------------------------------------------------------- libellés --- */
 
@@ -1682,9 +1683,18 @@ a{ color: inherit; }
         boite.appendChild(attente());
       });
       boite.appendChild(img);
-      /* Dire à l'écran ce que l'image est. Sans cette mention, une ambiance de
-         famille se lit comme la photo du produit. */
-      if(!v.reel) boite.appendChild(el('span','provisoire','Visuel provisoire'));
+      /* Dire à l'écran ce que l'image est : sans cette mention, une ambiance de
+         famille se lit comme la photo du produit.
+
+         COUPÉE POUR LA PRÉSENTATION DU 31/08, à la demande explicite du client,
+         qui assume que les 3 vraies photos ne se distinguent plus des 21 décors
+         seuls. À REMETTRE À true après le rendez-vous — ou à rendre inutile en
+         livrant les vraies photos manquantes.
+         L'alternative textuelle, elle, reste exacte dans les deux cas : elle
+         annonce une mise en scène de famille, jamais un flacon. */
+      if(!v.reel && MENTION_PROVISOIRE){
+        boite.appendChild(el('span','provisoire','Visuel provisoire'));
+      }
     } else {
       boite.appendChild(attente());
     }
