@@ -54,31 +54,15 @@ VERT, ROUGE, JAUNE, GRIS, RAZ = '\033[32m', '\033[31m', '\033[33m', '\033[90m', 
 # Boîtes relevées À LA MAIN sur une grille de coordonnées posée sur chaque
 # flat-lay, après lecture de l'étiquette. Aucune n'est déduite d'un numéro de
 # fichier ni d'une ressemblance de forme : seulement d'un nom lu.
-FLACONS = {
-    # 'angle' redresse le flacon : dans les flat-lays ils sont COUCHÉS en
-    # diagonale. Sans redressement ils paraissent renversés sur le décor.
-    'lattafa-yara': {
-        'src': 'flatlay-frais.jpg', 'boite': (66, 30, 205, 335), 'angle': 6,
-        'famille': 'florale', 'lu': 'YARA / Lattafa',
-    },
-    'volare-kenzie-summer-bottled': {
-        'src': 'flatlay-frais.jpg', 'boite': (126, 668, 302, 980), 'angle': 3,
-        'famille': 'florale', 'lu': 'KENZIE SUMMER BOTTLED / Volare',
-    },
-    # ÉCARTÉS APRÈS AVOIR REGARDÉ LE RENDU — ne pas les remettre sans
-    # nouvelle photo :
-    #   lattafa-asad-bourbon     : le cadre montre aussi Liquid Brun derrière
-    #   french-avenue-liquid-brun: le cadre montre aussi le flacon strié voisin
-    # Dans les deux cas le redressement (18° et 34°) laisse en plus des coins
-    # vides. Publier un visuel où DEUX produits apparaissent sous le nom d'un
-    # seul est une image de produit fausse — l'emplacement provisoire est
-    # préférable. Ces deux flacons sont trop imbriqués dans le flat-lay pour
-    # être isolés ; il faut une photo dédiée.
-    'fragrance-world-proud-of-you-amber': {
-        'src': 'flatlay-ambre.jpg', 'boite': (246, 792, 462, 1020), 'angle': 12,
-        'famille': 'ambree', 'lu': 'PROUD OF YOU AMBER / Fragrance World',
-    },
-}
+# VIDÉ LE 31/08 — l'approche « découpe du flat-lay + décor flouté » est abandonnée.
+# Elle achoppait sur un conflit de perspective insoluble : flat-lay pris à la verticale
+# contre décor de table vu à 15°. Un objet vu de dessus posé sur une table vue de côté
+# reste un autocollant, quel que soit le flou.
+# Remplacée par outils/produits.py : le flacon est REGÉNÉRÉ debout dans son décor, à
+# partir de deux références (photo du vrai flacon + décor de la famille). Les photos de
+# flat-lay servent désormais de référence de forme et de packaging, jamais de source à
+# découper — voir assets/sources/refs/.
+FLACONS = {}
 
 
 def fond(famille):
