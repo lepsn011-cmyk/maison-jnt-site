@@ -579,7 +579,11 @@ window.CATALOGUE = [
    comme étant le stock du client, devant des gens qui se déplacent ensuite
    en boutique.
    ========================================================================== */
-window.PRODUITS = {};
+window.PRODUITS = {
+  'fragrance-world-barakkat-rouge-540': 'assets/produits/fragrance-world-barakkat-rouge-540.jpg',
+  'french-avenue-liquid-brun':          'assets/produits/french-avenue-liquid-brun.jpg',
+  'lattafa-khamrah':                    'assets/produits/lattafa-khamrah.jpg'
+};
 
 window.DECORS = {
   ambree:     'assets/decors/ambree.jpg',
