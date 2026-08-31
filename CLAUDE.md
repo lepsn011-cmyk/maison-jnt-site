@@ -223,6 +223,52 @@ Scripts à recréer en tête de chaque nouveau projet (`scratchpad/shoot.py`, `s
 
 ---
 
+## 9. ÉCARTS LOCAUX — projet Maison JNT (2026-08)
+
+*La « Note finale » autorise une raison locale spécifique et vérifiée à l'emporter sur une règle générale, à condition de la documenter. Voici les trois écarts de ce projet, et quatre leçons neuves.*
+
+### 9.1 Deux fichiers au lieu d'un (§1.0)
+
+`index.html` + `catalogue.js`. Le brief impose un catalogue « 100 % piloté par un fichier de données », et le client doit pouvoir éditer ses parfums sans ouvrir le HTML. **`catalogue.js` déclare `window.CATALOGUE` — surtout pas un `fetch()` de JSON**, qui casserait à l'ouverture en `file://`.
+
+### 9.2 Le beige l'emporte sur l'anti-slop d'`impeccable` (§2 Phase 1)
+
+`impeccable` classe la bande OKLCH L 0.84-0.97 / C < 0.06 / teinte 40-100 comme « le défaut AI saturé de 2026 » — exactement le beige du logo client. **La palette client est verrouillée et prime**, la règle §2 le dit.
+
+Mais le diagnostic sous la règle reste juste et il a été appliqué : le tell n'est pas le beige, c'est **le beige dilué en quasi-blanc sur toute la page sans structure tonale**. D'où beige à valeur pleine (stratégie « Committed »), second beige plus profond en bandes alternées, et une section entière sur noir chaud. La page a une architecture de contraste, pas un aplat.
+
+### 9.3 Les skills se contredisent — il faut trancher, pas empiler
+
+`ui-ux-pro-max` recommandait pour « E-commerce Luxury » un style **Glassmorphism**, interdit absolu chez `impeccable`. Elle proposait aussi une palette rose vif et le pairing Playfair + Inter. **`impeccable` fait autorité sur le polish (§6) ; le client fait autorité sur la palette.** Retenu d'`ui-ux-pro-max` : le pairing Bodoni Moda + Jost, et sa checklist. Une recommandation de skill est un avis, pas un ordre — mais l'écarter se documente.
+
+### 9.4 LEÇON NEUVE — un glyphe peut exister dans le cmap et n'avoir aucune encre
+
+Le tiret cadratin `—` disparaissait au milieu d'une phrase en **Bodoni Moda**. `fontTools` confirmait pourtant U+2014 présent dans le cmap : la fausse piste « glyphe absent » était très crédible. Le rendu comparé a montré la vérité — **le glyphe est déclaré mais dessiné sans trait**.
+
+Aucun contrôle ne l'attrape : pas d'erreur console, pas d'échec réseau, pas d'échec de contraste, pas de débordement. **Seul l'œil sur une capture l'a vu.** Correctif durable : une face `@font-face` ne couvrant que `U+2013-2014`, placée avant Bodoni dans la pile, qui délègue les tirets à la sans-serif. Un contrôle « glyphes sans encre » a été ajouté à `outils/qa.py` (canvas + `getImageData`, ratissage de tous les caractères réellement affichés).
+
+### 9.5 LEÇON NEUVE — vérifier que les polices sont RÉELLEMENT peintes avant toute capture
+
+Chromium n'atteignait pas `fonts.googleapis.com` dans l'environnement de recette (`ERR_CONNECTION_RESET`) alors que `curl` y arrivait — le proxy sert l'outil, pas le navigateur. **Les captures montraient des polices de repli tout en paraissant normales.** Juger la typographie dessus aurait été juger un rendu qui n'existe pas.
+
+`document.fonts.check()` **ment** : il renvoie `true` dès qu'un repli existe. Seule `Array.from(document.fonts).filter(f => f.status === 'loaded')` fait foi. Contrôle ajouté à `qa.py`, et attente de `document.fonts.ready` dans `shoot.py`. Corrigé au fond en **auto-hébergeant les polices** — ce qui règle aussi la question CNIL et supprime une requête tierce.
+
+### 9.6 LEÇON NEUVE — la portée de la mesure de contraste fait tout
+
+Trois faux échecs successifs, tous dus à la portée et non au site :
+
+1. **Modale ouverte** → le `::backdrop` assombrit la page derrière ; mesurer le texte du fond donnait 1,65:1 pour du texte que personne ne lit. Quand une modale est ouverte, ne mesurer **que** son contenu.
+2. **Souris laissée sur le dernier élément cliqué** → c'est son état `:hover` qui était mesuré. `page.mouse.move(0,0)` avant toute mesure : l'état au repos est celui qui compte.
+3. **Contenu hors de la zone visible d'une modale qui défile** → sa bbox pointe une zone où il n'est pas peint. Ne mesurer que le visible, puis refaire un passage après défilement.
+
+Généralisation : **avant de corriger le site sur un échec de mesure, vérifier que la mesure vise la bonne couche.** Sinon on « corrige » un design sain pour satisfaire un instrument faux.
+
+### 9.7 LEÇON NEUVE — chercher la donnée manquante, jamais la compléter de mémoire
+
+Deux erreurs évitées uniquement par la vérification : **« Philos Jade » (Maison Alhambra) n'existe pas** — le nom était plausible et me venait spontanément ; et **« Ameerat Al Arab » est d'Asdaaf, pas de Paris Corner**. Une famille olfactive manquante (la chyprée) se cherche dans le catalogue réel — elle ne se fabrique pas en reclassant abusivement un parfum déjà présent.
+
+---
+
 ## Note finale
 
 Ce fichier documente une méthode convergée sur quatre projets réels, pas un résultat figé ni une structure aspirée. Si un futur projet contredit une règle ici avec une raison locale spécifique et vérifiée, cette raison locale gagne. Mais si tu t'apprêtes à répéter une des 15 erreurs de la §4, ou à supposer qu'une skill/bibliothèque existe sans l'avoir vue sur le disque, c'est que tu n'as pas encore vérifié quelque chose que tu aurais dû vérifier. Va le vérifier avant d'avancer.
