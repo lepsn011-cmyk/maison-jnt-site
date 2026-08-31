@@ -660,8 +660,12 @@ a{ color: inherit; }
   align-items: center;
   justify-content: center;
 }
-.entree__media{ margin-bottom: 14px; }
-.fiche__media{ aspect-ratio: 1 / 1; max-height: 300px; margin-bottom: 22px; }
+/* position:relative EXPLICITE avec z-index : conteneur de la mention
+   « visuel provisoire ». (CLAUDE.md §4.6 — un relative sans z-index ne
+   contient pas ses enfants positionnés de façon fiable.) */
+.entree__media{ margin-bottom: 14px; position: relative; z-index: 0; }
+.fiche__media{ aspect-ratio: 1 / 1; max-height: 300px; margin-bottom: 22px;
+  position: relative; z-index: 1; }
 
 .entree__media img,
 .fiche__media img{
@@ -674,6 +678,19 @@ a{ color: inherit; }
 /* Emplacement en attente : soigné, et lisiblement TEMPORAIRE. Pas de faux
    flacon dessiné, pas d'illustration SVG (interdits impeccable) — un panneau
    tonal et un mot, rien de plus. */
+.provisoire{
+  position: absolute;
+  left: 8px; bottom: 8px;
+  background: rgba(24,20,17,0.82);
+  color: var(--sur-encre);
+  font-size: 10px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
 .attente{
   display: flex;
   flex-direction: column;
@@ -807,6 +824,11 @@ a{ color: inherit; }
 .fiche__entete{
   position: sticky;
   top: 0;
+  /* z-index EXPLICITE : le média de la fiche est positionné (il porte la
+     mention « visuel provisoire »), donc il se peint au-dessus du contenu
+     statique. Sans cette ligne, l'image défilante passait PAR-DESSUS le titre
+     et le bouton de fermeture — mesuré à 1,00:1, texte invisible. */
+  z-index: 2;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -1390,6 +1412,7 @@ a{ color: inherit; }
   var BOUTIQUE  = window.BOUTIQUE  || {};
   var MDM       = window.MAISON_DU_MOIS || null;
   var DECORS    = window.DECORS || {};
+  var PRODUITS  = window.PRODUITS || {};
 
   /* --------------------------------------------------------- libellés --- */
 
@@ -1618,23 +1641,36 @@ a{ color: inherit; }
 
   /* Une photo propre à la référence l'emporte ; sinon le décor de sa famille.
      Rien en dur dans les entrées : ajouter une référence lui donne son décor. */
-  function visuel(p){ return p.photo || DECORS[p.famille] || null; }
+  /* Trois niveaux, du plus vrai au plus provisoire :
+       1. p.photo      — photo dédiée de la référence (aucune à ce jour)
+       2. PRODUITS[slug] — vrai flacon du stock, découpé du flat-lay et posé
+                           devant le décor de sa famille
+       3. DECORS[famille] — le décor seul : une ambiance, PAS le produit
+     Le niveau compte : il décide de l'alt et de la mention « visuel
+     provisoire ». Une image d'ambiance présentée comme le flacon serait un
+     visuel de produit faux. */
+  function visuel(p){
+    if(p.photo)              return { src: p.photo,            reel: true  };
+    if(PRODUITS[p.slug])     return { src: PRODUITS[p.slug],   reel: true  };
+    if(DECORS[p.famille])    return { src: DECORS[p.famille],  reel: false };
+    return null;
+  }
 
   function media(p, classe){
     var boite = el('div', classe);
-    var src = visuel(p);
+    var v = visuel(p);
     function attente(){
       var a = el('div','attente');
       a.appendChild(el('span','attente__trait'));
       a.appendChild(el('span','attente__mot','Photo à venir'));
       return a;
     }
-    if(src){
+    if(v){
       var img = document.createElement('img');
-      img.src = src;
+      img.src = v.src;
       /* Le décor illustre la FAMILLE, pas le flacon : l'alt doit le dire, sinon
          il décrit une image qui n'existe pas. */
-      img.alt = p.photo
+      img.alt = v.reel
         ? 'Flacon de ' + p.nom + ', ' + p.marque
         : 'Mise en scène des notes de la famille ' + (LIB_FAMILLE[p.famille] || p.famille);
       img.loading = 'lazy';
@@ -1646,6 +1682,9 @@ a{ color: inherit; }
         boite.appendChild(attente());
       });
       boite.appendChild(img);
+      /* Dire à l'écran ce que l'image est. Sans cette mention, une ambiance de
+         famille se lit comme la photo du produit. */
+      if(!v.reel) boite.appendChild(el('span','provisoire','Visuel provisoire'));
     } else {
       boite.appendChild(attente());
     }

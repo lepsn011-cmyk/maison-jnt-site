@@ -579,6 +579,12 @@ window.CATALOGUE = [
    comme étant le stock du client, devant des gens qui se déplacent ensuite
    en boutique.
    ========================================================================== */
+window.PRODUITS = {
+  'fragrance-world-proud-of-you-amber':  'assets/produits/fragrance-world-proud-of-you-amber.jpg',
+  'lattafa-yara':                        'assets/produits/lattafa-yara.jpg',
+  'volare-kenzie-summer-bottled':        'assets/produits/volare-kenzie-summer-bottled.jpg'
+};
+
 window.DECORS = {
   ambree:     'assets/decors/ambree.jpg',
   boisee:     'assets/decors/boisee.jpg',
